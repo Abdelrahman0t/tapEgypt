@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TAP EGYPT — Egyptian Real-Estate Marketplace</title>
+  <meta name="description" content="The digital real-estate marketplace for buying, reselling and discovering property in Egypt.">
+  <meta name="theme-color" content="#0B0E11">
+
+  <!-- Manrope Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- 1. EXECUTIVE PRODUCTION NAVBAR WITH FULL AWARD-WINNING UX -->
+  <header id="site-navbar" class="site-navbar">
+    <div class="container navbar-inner">
+      
+      <!-- Brand Logo -->
+      <a href="#/" class="brand-logo">
+        <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        <span>TAP EGYPT</span>
+      </a>
+
+      <!-- Navigation Links Structure -->
+      <ul class="nav-links">
+        <li><a href="#/properties" class="nav-link active">Buy / Resale</a></li>
+        <li><a href="#/properties" class="nav-link" onclick="app.setMode('rent')">Rent</a></li>
+        <li><a href="#/" class="nav-link" onclick="document.getElementById('explore-devs').scrollIntoView({behavior:'smooth'})">Developers</a></li>
+        <li><a href="#/" class="nav-link" onclick="app.openBlogModal()">Blog</a></li>
+      </ul>
+
+      <!-- Action Cluster: QR App Hover, Saved Heart, Notification Bell, Auth & Add Listing -->
+      <div class="nav-right-actions">
+        
+        <!-- 1. Download App QR Popover Trigger -->
+        <div class="nav-qr-wrapper">
+          <button class="btn-nav-app-qr">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>
+            App
+          </button>
+
+          <div class="nav-qr-popover">
+            <div class="qr-popover-text">Scan to Download TAP EGYPT Mobile App</div>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=https://tapegypt.com/app" alt="TAP EGYPT App QR" class="qr-code-img">
+            <div style="font-size: 11px; color: var(--teal-primary); font-weight: 700;">iOS & Android</div>
+          </div>
+        </div>
+
+        <!-- 2. Saved Units Heart Button with Live Counter Badge -->
+        <button class="btn-nav-saved-heart" title="Saved Properties" onclick="app.sortOption='favorites'; window.location.hash='#/properties';">
+          <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          <span id="header-fav-count" class="saved-badge-pill">0</span>
+        </button>
+
+        <!-- 3. Notification Bell Icon with App Notification Card -->
+        <div class="nav-bell-wrapper">
+          <button id="btn-nav-bell" class="btn-nav-bell" title="Notifications">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              <path d="M19.5 4.5a3.5 3.5 0 0 1 0 4.5"></path>
+            </svg>
+            <span class="bell-badge-dot"></span>
+          </button>
+
+          <!-- Notification Dropdown Popover matching photo_2026-08-12_16-59-13.jpg -->
+          <div id="nav-bell-popover" class="nav-bell-popover">
+            <div class="bell-popover-head">
+              <span class="bell-popover-title">Notifications</span>
+              <span class="bell-popover-count">1 New</span>
+            </div>
+
+            <div class="app-notif-card">
+              <div class="app-notif-card-header">
+                <div class="app-notif-card-title-group">
+                  <div class="app-notif-brand-badge">
+                    <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                  </div>
+                  <span class="app-notif-card-title">Greetings..</span>
+                </div>
+                <span class="app-notif-card-date">2026-08-11</span>
+              </div>
+              <div class="app-notif-card-text">
+                Hi abdelrahman, Welcome to TAP For Real Estate Mobile Application, its our pleasure to help you finding ur Primary, Resale Or Rent Units.
+              </div>
+            </div>
+
+            <div class="bell-email-sub-banner">
+              <div class="bell-sub-text">
+                <strong>Get latest offers via email!</strong><br>
+                Sign in to receive exclusive resale deals, developer launches, and market news directly in your inbox.
+              </div>
+              <button class="btn-bell-sub-action" onclick="app.openAuthModal()">Sign In to Subscribe</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Dynamic Auth Button / Signed-In User State -->
+        <div id="nav-auth-container">
+          <button class="btn-nav-auth" onclick="app.openAuthModal()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            Sign In
+          </button>
+        </div>
+
+        <!-- 5. List Property Primary Action CTA -->
+        <button class="btn-nav-teal" onclick="app.openListingModal()">
+          + List Property
+        </button>
+
+      </div>
+
+      <button class="mobile-menu-btn" onclick="document.getElementById('mobile-drawer').classList.add('open')">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="#FFF"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+      </button>
+
+    </div>
+  </header>
+
+  <!-- AUTHENTICATION MODAL (LOGIN / SIGN UP SYSTEM) -->
+  <div id="auth-modal-overlay" class="modal-overlay">
+    <div class="modal-card">
+      <button class="modal-close-btn" onclick="app.closeAuthModal()">✕</button>
+
+      <div class="modal-tabs-row">
+        <button id="tab-login-btn" class="modal-tab-btn active" onclick="app.switchAuthTab('login')">Sign In</button>
+        <button id="tab-signup-btn" class="modal-tab-btn" onclick="app.switchAuthTab('signup')">Create Account</button>
+      </div>
+
+      <!-- Login Form View -->
+      <form id="login-form" onsubmit="event.preventDefault(); app.handleAuthSubmit('login');">
+        <div class="modal-header-title">Welcome back</div>
+        <div class="modal-header-sub">Sign in to manage your resale listings and get market offers.</div>
+
+        <div class="modal-form-group">
+          <label class="modal-form-label">Email Address</label>
+          <input type="email" id="login-email-input" class="modal-form-input" placeholder="abdelrahman@tapegypt.com" required>
+        </div>
+
+        <div class="modal-form-group">
+          <label class="modal-form-label">Password</label>
+          <input type="password" class="modal-form-input" placeholder="••••••••" required>
+        </div>
+
+        <button type="submit" class="btn-modal-submit">Sign In to TAP EGYPT</button>
+      </form>
+
+      <!-- Signup Form View -->
+      <form id="signup-form" style="display: none;" onsubmit="event.preventDefault(); app.handleAuthSubmit('signup');">
+        <div class="modal-header-title">Create Account</div>
+        <div class="modal-header-sub">Join TAP EGYPT to list your units and get market offers via email.</div>
+
+        <div class="modal-form-group">
+          <label class="modal-form-label">Full Name</label>
+          <input type="text" id="signup-name-input" class="modal-form-input" placeholder="Abdelrahman Tarek" required>
+        </div>
+
+        <div class="modal-form-group">
+          <label class="modal-form-label">Phone Number</label>
+          <input type="tel" class="modal-form-input" placeholder="+20 100 123 4567" required>
+        </div>
+
+        <div class="modal-form-group">
+          <label class="modal-form-label">Email Address</label>
+          <input type="email" class="modal-form-input" placeholder="name@example.com" required>
+        </div>
+
+        <div class="modal-form-group">
+          <label class="modal-form-label">Create Password</label>
+          <input type="password" class="modal-form-input" placeholder="••••••••" required>
+        </div>
+
+        <button type="submit" class="btn-modal-submit">Create Account</button>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- LIST YOUR PROPERTY SUBMISSION MODAL -->
+  <div id="listing-modal-overlay" class="modal-overlay">
+    <div class="modal-card">
+      <button class="modal-close-btn" onclick="app.closeListingModal()">✕</button>
+
+      <div class="modal-header-title">+ List Your Property</div>
+      <div class="modal-header-sub">Reach thousands of active property buyers and renters in Egypt.</div>
+
+      <form onsubmit="event.preventDefault(); app.handleListingSubmit(this);">
+        <div class="modal-form-group">
+          <label class="modal-form-label">Property Title</label>
+          <input type="text" name="title" class="modal-form-input" placeholder="e.g. 3 Bedroom Chalet in Hacienda Bay" required>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="modal-form-group">
+            <label class="modal-form-label">Listing Type</label>
+            <select name="type" class="modal-form-input" style="cursor: pointer;">
+              <option value="For Sale">For Sale (Resale)</option>
+              <option value="For Rent">For Rent</option>
+            </select>
+          </div>
+
+          <div class="modal-form-group">
+            <label class="modal-form-label">Location</label>
+            <select name="location" class="modal-form-input" style="cursor: pointer;">
+              <option value="North Coast">North Coast</option>
+              <option value="El Sheikh Zayed">Sheikh Zayed</option>
+              <option value="New Cairo">New Cairo</option>
+              <option value="6 October">6 October</option>
+              <option value="El Sokhna">El Sokhna</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div class="modal-form-group">
+            <label class="modal-form-label">Price (EGP)</label>
+            <input type="number" name="price" class="modal-form-input" placeholder="7,500,000" required>
+          </div>
+
+          <div class="modal-form-group">
+            <label class="modal-form-label">Contact Phone</label>
+            <input type="tel" name="phone" class="modal-form-input" placeholder="+20 100 000 0000" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-modal-submit">Publish Property Listing</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- BLOG / MARKET INSIGHTS MODAL -->
+  <div id="blog-modal-overlay" class="modal-overlay">
+    <div class="modal-card" style="max-width: 680px;">
+      <button class="modal-close-btn" onclick="app.closeBlogModal()">✕</button>
+
+      <div class="modal-header-title">TAP EGYPT Market Insights</div>
+      <div class="modal-header-sub">Latest real estate guides, price trends, and developer news in Egypt.</div>
+
+      <div style="display: flex; flex-direction: column; gap: 16px; max-height: 400px; overflow-y: auto; padding-right: 8px;">
+        
+        <div style="padding: 16px; border: 1px solid var(--border-light); border-radius: 12px; background: var(--bg-offwhite);">
+          <div style="font-size: 11px; font-weight: 700; color: var(--teal-primary); text-transform: uppercase;">Guide • August 2026</div>
+          <div style="font-size: 16px; font-weight: 700; color: var(--text-primary); margin: 4px 0 6px;">How to Buy Resale Units with 0% Commission in Egypt</div>
+          <div style="font-size: 13.5px; color: var(--text-secondary); line-height: 1.5;">Learn the exact steps to acquire direct resale chalets in Hacienda and Sheikh Zayed villas directly from original owners with verified documentation.</div>
+        </div>
+
+        <div style="padding: 16px; border: 1px solid var(--border-light); border-radius: 12px; background: var(--bg-offwhite);">
+          <div style="font-size: 11px; font-weight: 700; color: var(--resale-yellow-dark); text-transform: uppercase;">Market News • 2026</div>
+          <div style="font-size: 16px; font-weight: 700; color: var(--text-primary); margin: 4px 0 6px;">SODIC & ORA Compound Price Reports in Sheikh Zayed</div>
+          <div style="font-size: 13.5px; color: var(--text-secondary); line-height: 1.5;">An in-depth breakdown of square meter price movements, downpayment structures, and installment timelines across premier West Cairo developments.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Navigation Drawer -->
+  <div id="mobile-drawer" class="filter-drawer-overlay">
+    <div class="filter-drawer-panel-left" style="width: 280px;">
+      <div class="drawer-head-row" style="background: var(--dark-surface); color: #FFF;">
+        <div>
+          <div style="font-weight: 700; font-size: 16px;">TAP EGYPT</div>
+          <div style="font-size: 12px; color: #9CA3AF;">Digital Real Estate Marketplace</div>
+        </div>
+        <button class="btn-drawer-close" style="color:#FFF;" onclick="document.getElementById('mobile-drawer').classList.remove('open')">✕</button>
+      </div>
+      <div class="drawer-body-scroll">
+        <div class="nav-link" onclick="app.openListingModal(); document.getElementById('mobile-drawer').classList.remove('open');" style="color: var(--teal-primary); font-weight: 700; margin-bottom: 14px;">+ List Property</div>
+        <div class="nav-link" onclick="window.location.hash='#/properties'; document.getElementById('mobile-drawer').classList.remove('open');" style="margin-bottom: 12px;">Buy / Resale</div>
+        <div class="nav-link" onclick="app.setMode('rent'); document.getElementById('mobile-drawer').classList.remove('open');" style="margin-bottom: 12px;">Rent</div>
+        <div class="nav-link" onclick="document.getElementById('explore-devs').scrollIntoView({behavior:'smooth'}); document.getElementById('mobile-drawer').classList.remove('open');" style="margin-bottom: 12px;">Developers</div>
+        <div class="nav-link" onclick="app.openBlogModal(); document.getElementById('mobile-drawer').classList.remove('open');" style="margin-bottom: 12px;">Blog & News</div>
+        <div class="nav-link" onclick="app.openAuthModal(); document.getElementById('mobile-drawer').classList.remove('open');">Sign In / Register</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN ROUTER CONTAINER -->
+  <main id="app-main">
+
+    <!-- HOMEPAGE LANDING VIEW -->
+    <div id="home-view">
+
+      <!-- 2. FULL-WIDTH HERO WITH DARK OVERLAY — Houzez-style centered layout -->
+      <section class="product-hero-section">
+        <img class="hero-bg-photo" src="images/luxury_hero_villa.png" alt="Egyptian Luxury Real Estate Marketplace">
+        <div class="hero-scrim-overlay"></div>
+
+        <!-- Centered Headline & Subtitle -->
+        <div class="hero-content-wrap">
+          <h1 class="hero-title-main">Find Your Dream Property in Egypt</h1>
+          <p class="hero-paragraph-sub">
+            Browse resale, rental and new-project properties with real prices, payment plans and developer information — all in one place.
+          </p>
+        </div>
+
+        <!-- Search Card — absolute bottom-center, overlapping into the section below -->
+        <div class="hero-search-overlap-container">
+          <div class="hero-search-wrapper-exact">
+
+            <!-- Search Mode Tabs -->
+            <div class="hero-tab-pills-wrap">
+              <button class="hero-mode-pill active" data-mode="all" onclick="app.setMode('all')">All</button>
+              <button class="hero-mode-pill" data-mode="resale" onclick="app.setMode('resale')">Resale</button>
+              <button class="hero-mode-pill" data-mode="rent" onclick="app.setMode('rent')">Rent</button>
+            </div>
+
+            <!-- Main White Search Card (full original content restored) -->
+            <div class="hero-search-card-exact">
+
+              <!-- Always-Visible Search Row -->
+              <div class="search-main-bar-row">
+                <input type="text" class="hero-input-field-white search-input-field" placeholder="Search keyword...">
+
+                <select id="hero-city-select" class="hero-select-field-white">
+                  <option value="">All Cities</option>
+                </select>
+
+                <select id="hero-type-select" class="hero-select-field-white">
+                  <option value="">All Types</option>
+                </select>
+
+                <div class="hero-price-slider-box">
+                  <div class="price-slider-head">
+                    <span>Price:</span>
+                    <span id="hero-price-val-label">0 - 20M EGP</span>
+                  </div>
+                  <input type="range" min="0" max="20000000" step="500000" value="20000000" class="range-slider-native" id="hero-price-slider">
+
+                  <!-- 1-Click Price Range Shortcut Chips -->
+                  <div class="hero-price-quick-chips">
+                    <span class="price-quick-chip" onclick="app.setPriceQuickFilter(0, 5000000)">&lt; 5M</span>
+                    <span class="price-quick-chip" onclick="app.setPriceQuickFilter(5000000, 10000000)">5M - 10M</span>
+                    <span class="price-quick-chip" onclick="app.setPriceQuickFilter(10000000, 20000000)">10M+</span>
+                  </div>
+                </div>
+
+                <button id="btn-toggle-advanced-hero" class="btn-circle-filter-toggle" title="Advanced Filter">
+                  <svg viewBox="0 0 24 24"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg>
+                </button>
+
+                <button class="btn-teal-search-main" onclick="window.location.hash='#/properties'">Search Property</button>
+              </div>
+
+              <!-- Advanced Floating Popover Panel -->
+              <div id="hero-advanced-panel" class="hero-advanced-expandable-panel">
+
+                <!-- Secondary Dropdowns Grid -->
+                <div class="advanced-dropdowns-grid">
+                  <div class="adv-field-group">
+                    <label class="adv-field-label">Baths</label>
+                    <select id="hero-adv-baths" class="hero-select-field-white">
+                      <option value="">All Baths</option>
+                      <option value="1">1 Bath</option>
+                      <option value="2">2 Baths</option>
+                      <option value="3">3 Baths</option>
+                      <option value="4">4+ Baths</option>
+                    </select>
+                  </div>
+
+                  <div class="adv-field-group">
+                    <label class="adv-field-label">Bedrooms</label>
+                    <select id="hero-adv-beds" class="hero-select-field-white">
+                      <option value="">All Bedrooms</option>
+                      <option value="1">1 Bedroom</option>
+                      <option value="2">2 Bedrooms</option>
+                      <option value="3">3 Bedrooms</option>
+                      <option value="4">4+ Bedrooms</option>
+                    </select>
+                  </div>
+
+                  <div class="adv-field-group">
+                    <label class="adv-field-label">Min size</label>
+                    <select id="hero-adv-min-size" class="hero-select-field-white">
+                      <option value="">Min (m²)</option>
+                      <option value="50">50 m²</option>
+                      <option value="100">100 m²</option>
+                      <option value="150">150 m²</option>
+                      <option value="200">200 m²</option>
+                    </select>
+                  </div>
+
+                  <div class="adv-field-group">
+                    <label class="adv-field-label">Max size</label>
+                    <select id="hero-adv-max-size" class="hero-select-field-white">
+                      <option value="">Max (m²)</option>
+                      <option value="200">200 m²</option>
+                      <option value="300">300 m²</option>
+                      <option value="400">400 m²</option>
+                      <option value="500">500+ m²</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Amenities Checkboxes Grid -->
+                <div class="amenities-section-title">Amenities:</div>
+                <div class="amenities-checkboxes-grid">
+                  <label class="amenity-checkbox-label"><input type="checkbox"> Air Condition</label>
+                  <label class="amenity-checkbox-label"><input type="checkbox"> Disabled Access</label>
+                  <label class="amenity-checkbox-label"><input type="checkbox"> Floor</label>
+                  <label class="amenity-checkbox-label"><input type="checkbox"> Heating</label>
+                  <label class="amenity-checkbox-label"><input type="checkbox"> Renovation</label>
+                  <label class="amenity-checkbox-label"><input type="checkbox"> Window Type</label>
+                  <label class="amenity-checkbox-label"><input type="checkbox"> Cable TV</label>
+                  <label class="amenity-checkbox-label"><input type="checkbox"> Elevator</label>
+                  <label class="amenity-checkbox-label"><input type="checkbox"> Furnishing</label>
+                  <label class="amenity-checkbox-label"><input type="checkbox"> Intercom</label>
+                  <label class="amenity-checkbox-label"><input type="checkbox"> Security</label>
+                  <label class="amenity-checkbox-label"><input type="checkbox"> Ceiling Height</label>
+                  <label class="amenity-checkbox-label"><input type="checkbox"> Fence</label>
+                  <label class="amenity-checkbox-label"><input type="checkbox"> Garage</label>
+                  <label class="amenity-checkbox-label"><input type="checkbox"> Parking</label>
+                  <label class="amenity-checkbox-label"><input type="checkbox"> Swimming Pool</label>
+                  <label class="amenity-checkbox-label"><input type="checkbox"> Garden</label>
+                  <label class="amenity-checkbox-label"><input type="checkbox"> Pet Friendly</label>
+                  <label class="amenity-checkbox-label"><input type="checkbox"> WiFi</label>
+                </div>
+
+                <!-- Action Row -->
+                <div class="adv-actions-row">
+                  <button class="btn-adv-reset" onclick="app.resetFilters()">Clear Filters</button>
+                  <button class="btn-adv-apply" onclick="window.location.hash='#/properties';">Apply Filters</button>
+                </div>
+
+              </div>
+              <!-- end advanced panel -->
+
+            </div>
+            <!-- end search card -->
+
+          </div>
+        </div>
+
+      </section>
+
+      <!-- 3. MARKETPLACE MAIN BODY (Subtle Off-White #F7F8F9) -->
+      <main class="marketplace-main-body" style="padding-top: 140px;">
+
+
+        
+        <!-- SECTION 1: RECOMMENDED PROPERTIES -->
+        <section class="recommended-section container">
+          <div class="hz-section-header">
+            <div class="hz-section-header-text">
+              <h2 class="hz-section-title">Discover Our Recommended Properties</h2>
+              <p class="hz-section-subtitle">Handpicked properties available for buy, resale, and rent in Egypt</p>
+            </div>
+          </div>
+
+          <div id="featured-properties-target" class="app-cards-grid"></div>
+
+          <div class="discover-more-wrap">
+            <a href="#/properties" class="btn-discover-more-units">
+              Discover More Recommended Units →
+            </a>
+          </div>
+        </section>
+
+        <!-- SECTION 1.5: WHY CHOOSE TAP EGYPT (WHY USE OUR SERVICES) -->
+        <section class="why-choose-us-section container">
+          <div class="hz-section-header" style="text-align: center; flex-direction: column; align-items: center; margin-bottom: 40px;">
+            <h2 class="hz-section-title">Why Choose TAP EGYPT?</h2>
+            <p class="hz-section-subtitle">Egypt’s most trusted real estate platform for buyers, sellers, and investors</p>
+          </div>
+
+          <div class="why-choose-grid">
+            
+            <!-- Card 1 -->
+            <div class="why-choose-card">
+              <div class="why-choose-icon-wrap">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                  <path d="M9 12l2 2 4-4"/>
+                </svg>
+              </div>
+              <h3 class="why-choose-card-title">100% Verified Listings</h3>
+              <p class="why-choose-card-desc">Every listing is manually inspected with verified ownership documents, real photos, and zero fake price baiting.</p>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="why-choose-card">
+              <div class="why-choose-icon-wrap">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M12 6v6l4 2"/>
+                </svg>
+              </div>
+              <h3 class="why-choose-card-title">Direct Owner & Master Devs</h3>
+              <p class="why-choose-card-desc">Deal directly with top Egyptian master builders and verified property owners without middleman inflation.</p>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="why-choose-card">
+              <div class="why-choose-icon-wrap">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+              </div>
+              <h3 class="why-choose-card-title">Prime Locations Nationwide</h3>
+              <p class="why-choose-card-desc">Curated selection of luxury villas, chalets, and apartments in Sheikh Zayed, New Cairo, North Coast, and El Sokhna.</p>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="why-choose-card">
+              <div class="why-choose-icon-wrap">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+                  <line x1="12" y1="18" x2="12.01" y2="18"/>
+                </svg>
+              </div>
+              <h3 class="why-choose-card-title">Instant Mobile & Price Alerts</h3>
+              <p class="why-choose-card-desc">Get notified the second price drops occur, schedule 1-click site visits, and chat directly with property advisors.</p>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- SECTION 2: TODAY'S OFFER SLIDER -->
+        <section class="todays-offer-section container">
+          <div class="todays-offer-header">
+            <div>
+              <h2 class="todays-offer-title">Today's Offer</h2>
+              <p class="todays-offer-subtitle">Exclusive limited-time property deals and prime launches in Egypt</p>
+            </div>
+            <div class="offer-slider-nav-btns">
+              <button class="offer-nav-btn prev" onclick="app.scrollOfferSlider(-1)" title="Previous Offer">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+              </button>
+              <button class="offer-nav-btn next" onclick="app.scrollOfferSlider(1)" title="Next Offer">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Horizontal Carousel Track -->
+          <div id="todays-offer-slider-track" class="todays-offer-slider-track"></div>
+        </section>
+
+        <!-- SECTION 2.5: FULL-WIDTH BROKER & OWNER SECTION -->
+        <section class="broker-fullwidth-section">
+          <img src="images/mountain_view.png" alt="Mountain View Real Estate" class="broker-fw-bg" loading="lazy">
+          <div class="broker-fw-overlay"></div>
+
+          <div class="container broker-fw-container">
+            <div class="broker-fw-grid">
+              
+              <!-- Left Column: Headline, Copy, Action -->
+              <div class="broker-fw-left">
+                <span class="broker-fw-kicker">BROKER & PROPERTY OWNER NETWORK</span>
+                <h2 class="broker-fw-title">Are you a broker or property owner looking to sell or rent?</h2>
+                <p class="broker-fw-sub">
+                  List your resale, rental, or primary units on TAP EGYPT. Reach thousands of active buyers and tenants daily with instant visibility across Egypt.
+                </p>
+                <div class="broker-fw-cta-row">
+                  <button class="btn-broker-fw-primary" onclick="app.openListPropertyModal()">
+                    List Your Property Now →
+                  </button>
+                </div>
+              </div>
+
+              <!-- Right Column: 3 Clean Value Cards -->
+              <div class="broker-fw-right">
+                <div class="broker-value-card">
+                  <div class="value-card-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                  </div>
+                  <div>
+                    <h3 class="value-card-title">Direct Buyer Enquiries</h3>
+                    <p class="value-card-desc">Receive phone calls and messages directly from interested buyers with zero middleman delays.</p>
+                  </div>
+                </div>
+
+                <div class="broker-value-card">
+                  <div class="value-card-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  </div>
+                  <div>
+                    <h3 class="value-card-title">Verified Unit Exposure</h3>
+                    <p class="value-card-desc">Your listings are formatted into clean Houzez mobile & desktop property cards for maximum response.</p>
+                  </div>
+                </div>
+
+                <div class="broker-value-card">
+                  <div class="value-card-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                  </div>
+                  <div>
+                    <h3 class="value-card-title">Transparent Price Formatting</h3>
+                    <p class="value-card-desc">Publish your resale and rental properties with clear financial breakdown (Downpayment & Total Price).</p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 2.8: OUR FEATURED LISTINGS -->
+        <section class="todays-offer-section container" style="margin-bottom: 90px;">
+          <div class="todays-offer-header">
+            <div>
+              <h2 class="todays-offer-title">Our Featured Listings</h2>
+              <p class="todays-offer-subtitle">Exclusive prime inventory and featured resale opportunities across Egypt</p>
+            </div>
+            <a href="#/properties" style="font-size: 14px; font-weight: 700; color: var(--teal-primary); text-decoration: none;">
+              Explore All Featured →
+            </a>
+          </div>
+
+          <div id="our-featured-properties-target" class="app-cards-grid"></div>
+        </section>
+
+        <!-- SECTION 3: APP SHOWCASE (FULL-WIDTH SOFT TINT BANNER) -->
+        <section class="app-fullwidth-showcase-section">
+          <div class="container">
+            <div class="app-fullwidth-grid">
+              
+              <!-- Left Column: Phone Mockup with Floating QR Badge -->
+              <div class="app-showcase-img-col" style="position: relative;">
+                <img src="images/phoneMockup/mocktap-left.png" alt="TAP EGYPT Mobile App" class="app-phone-preview-img" loading="lazy">
+                
+                <!-- Floating Real Scannable QR Code Card (Visible on Desktop & Medium Screens Only) -->
+                <div class="app-qr-code-card desktop-only-qr">
+                  <div class="qr-code-img-wrap">
+                    <img src="images/tap_egypt_app_qr.png?v=2" alt="TAP EGYPT Scannable App QR Code" style="width: 100%; height: 100%; object-fit: contain;">
+                  </div>
+                  <div class="qr-code-text-wrap">
+                    <span class="qr-title">Scan to Download App</span>
+                    <span class="qr-sub">Point phone camera to scan</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right Column: Brand Copy, Feature Highlights & TapEgypt CTAs -->
+              <div class="app-showcase-content-col">
+                <span class="app-section-kicker">TAP EGYPT ON THE GO</span>
+                <h2 class="app-section-title">Wherever you search, your properties follow.</h2>
+                <p class="app-section-desc">
+                  Search verified primary and resale listings across Egypt. Save your favorite units, get instant price alerts, and contact property owners directly from your mobile device.
+                </p>
+
+                <!-- Feature Bullets matching TapEgypt design system -->
+                <ul class="app-bullets-list">
+                  <li class="app-bullet-item">
+                    <div class="app-bullet-icon">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <span><strong>100% Real Resale Deals</strong> — Direct from verified property owners</span>
+                  </li>
+                  <li class="app-bullet-item">
+                    <div class="app-bullet-icon">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <span><strong>Financial Breakdown</strong> — Clear downpayment & monthly installment plans</span>
+                  </li>
+                  <li class="app-bullet-item">
+                    <div class="app-bullet-icon">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <span><strong>Direct Communication</strong> — Zero middleman delays via WhatsApp or Phone</span>
+                  </li>
+                </ul>
+
+                <!-- Download CTAs styled in TapEgypt Teal Brand Theme -->
+                <div class="app-cta-row">
+                  <a href="https://apps.apple.com/eg/app/tap-egypt/id1586677400" target="_blank" rel="noopener noreferrer" class="btn-app-download-teal" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.32c.67-.82 1.13-1.97.99-3.12-.98.04-2.19.66-2.88 1.47-.62.73-1.16 1.91-1.01 3.03 1.1.09 2.23-.55 2.9-1.38z"/></svg>
+                    <span>Download for iOS</span>
+                  </a>
+                  <a href="https://play.google.com/store/apps/details?id=com.triplea.TripleAProperties" target="_blank" rel="noopener noreferrer" class="btn-app-download-outline" style="text-decoration: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M3.6 1.9c-.3.3-.4.8-.4 1.4v17.4c0 .6.1 1.1.4 1.4l.1.1 9.7-9.7v-.2L3.7 1.8l-.1.1zm12.3 8.7L13.2 8 3.6.4c.4-.2.8-.2 1.3 0l11 6.2zM13.2 16l2.7-1.6-11 6.2c-.5.2-.9.2-1.3 0L13.2 16zm2.8-3.2l3.4-1.9c.8-.4.8-1.2 0-1.6l-3.4-1.9-2.9 2.9 2.9 2.5z"/></svg>
+                    <span>Google Play</span>
+                  </a>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 4: OUR TRUSTED DEVELOPERS (14 LOGO IMAGES: 7 PER ROW) -->
+        <section id="explore-devs" class="container trusted-developers-section" style="margin-bottom: 120px;">
+          <div class="hz-section-header" style="margin-bottom: 36px; text-align: center; flex-direction: column; align-items: center;">
+            <h2 class="hz-section-title">Our Trusted Developers</h2>
+            <p class="hz-section-subtitle">Partnering with Egypt’s master builders across Sheikh Zayed, New Cairo, and North Coast</p>
+          </div>
+
+          <!-- 2 Rows Grid: 7 Logos in Row 1, 7 Logos in Row 2 -->
+          <div id="dev-grid-14-target" class="dev-grid-two-rows"></div>
+        </section>
+
+
+
+
+      </main>
+
+    </div>
+
+    <!-- 3. CATALOG LISTINGS PAGE VIEW (`#/properties`) -->
+    <div id="properties-view" style="display: none;" class="catalog-page-container">
+      <div class="container">
+        
+        <!-- Top Control Bar -->
+        <div class="catalog-top-control-bar">
+          <div class="control-bar-left">
+            <button class="btn-catalog-filter-pill btn-filter-trigger">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg>
+              Filters
+            </button>
+            <div id="properties-results-count" class="results-count-text">6 Results</div>
+          </div>
+
+          <div class="control-bar-right">
+            <div class="sort-select-box">
+              <span>Sort by:</span>
+              <select id="catalog-sort-select" class="sort-dropdown-pill">
+                <option value="default">Featured</option>
+                <option value="low-price">Price: Low to High</option>
+                <option value="high-price">Price: High to Low</option>
+                <option value="favorites">Top Rated</option>
+              </select>
+            </div>
+
+            <div class="view-mode-toggle">
+              <button class="btn-view-icon active" id="btn-view-grid" title="Grid View">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h4v4H4V4zm6 0h4v4h-4V4zm6 0h4v4h-4V4zM4 10h4v4H4v-4zm6 0h4v4h-4v-4zm6 0h4v4h-4v-4zM4 16h4v4H4v-4zm6 0h4v4h-4v-4zm6 0h4v4h-4v-4z"/></svg>
+              </button>
+              <button class="btn-view-icon" id="btn-view-list" title="List View">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M4 10.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm0-6c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm0 12c-.83 0-1.5.68-1.5 1.5s.68 1.5 1.5 1.5 1.5-.68 1.5-1.5-.67-1.5-1.5-1.5zM7 19h14v-2H7v2zm0-6h14v-2H7v2zm0-8v2h14V5H7z"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Active Filter Tags Bar -->
+        <div id="active-filter-tags" class="active-filters-tags-bar">
+          <div class="active-filter-chip">Location: All Cities <span onclick="app.resetFilters()">×</span></div>
+          <button class="btn-clear-all-text" onclick="app.resetFilters()">CLEAR ALL</button>
+        </div>
+
+        <!-- 3-Column Catalog Grid -->
+        <div id="properties-full-grid" class="app-cards-grid"></div>
+
+      </div>
+    </div>
+
+    <!-- ISOLATED PROPERTY DETAIL ROUTE (`#/properties/[slug]`) -->
+    <div id="detail-view" style="display: none;" class="detail-page-container">
+      <div id="detail-view-target" class="container"></div>
+    </div>
+
+  </main>
+
+  <!-- 4. AUTHENTIC TAP EGYPT APP SEARCH FILTER DRAWER -->
+  <div id="filter-drawer-backdrop" class="filter-drawer-overlay">
+    <div class="filter-drawer-panel-left">
+      
+      <!-- Drawer Header Bar -->
+      <div class="drawer-head-row">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <button class="btn-drawer-close" onclick="app.toggleFilterDrawer(false)">←</button>
+          <h3 class="drawer-title-text">Search Filter</h3>
+        </div>
+        <button id="reset-filter-btn" class="btn-drawer-reset-link">Reset</button>
+      </div>
+
+      <div class="drawer-body-scroll">
+        
+        <!-- 1. Downpayment -->
+        <div>
+          <div class="drawer-section-label">Downpayment</div>
+          <div class="teal-range-pair">
+            <input type="text" class="teal-capsule-input" placeholder="From" id="filter-dp-from">
+            <span class="colon-sep">:</span>
+            <input type="text" class="teal-capsule-input" placeholder="To" id="filter-dp-to">
+          </div>
+        </div>
+
+        <!-- 2. Installments -->
+        <div>
+          <div class="drawer-section-label">Installments</div>
+          <div class="teal-range-pair">
+            <input type="text" class="teal-capsule-input" placeholder="From" id="filter-inst-from">
+            <span class="colon-sep">:</span>
+            <input type="text" class="teal-capsule-input" placeholder="To" id="filter-inst-to">
+          </div>
+        </div>
+
+        <!-- 3. Price -->
+        <div>
+          <div class="drawer-section-label">Price</div>
+          <div class="teal-range-pair">
+            <input type="text" class="teal-capsule-input" placeholder="From" id="filter-price-from">
+            <span class="colon-sep">:</span>
+            <input type="text" class="teal-capsule-input" placeholder="To" id="filter-price-to">
+          </div>
+        </div>
+
+        <!-- 4. Location -->
+        <div>
+          <div class="drawer-section-label">Location</div>
+          <select id="filter-location-select" class="gray-capsule-select">
+            <option value="">Select</option>
+          </select>
+        </div>
+
+        <!-- 5. Developer -->
+        <div>
+          <div class="drawer-section-label">Developer</div>
+          <select id="filter-developer-select" class="gray-capsule-select">
+            <option value="">Select</option>
+          </select>
+        </div>
+
+        <!-- 6. Project -->
+        <div>
+          <div class="drawer-section-label">Project</div>
+          <select id="filter-project-select" class="gray-capsule-select">
+            <option value="">Select</option>
+          </select>
+        </div>
+
+        <!-- 7. Number of bedrooms -->
+        <div>
+          <div class="drawer-section-label">Number of bedrooms</div>
+          <div id="bedroom-circles-group" class="circle-pills-row">
+            <button class="circle-pill active" data-value="Any">Any</button>
+            <button class="circle-pill" data-value="1">1</button>
+            <button class="circle-pill" data-value="2">2</button>
+            <button class="circle-pill" data-value="3">3</button>
+            <button class="circle-pill" data-value="4">4</button>
+            <button class="circle-pill" data-value="+5">+5</button>
+          </div>
+        </div>
+
+        <!-- 8. Number of bathrooms -->
+        <div>
+          <div class="drawer-section-label">Number of bathrooms</div>
+          <div id="bathroom-circles-group" class="circle-pills-row">
+            <button class="circle-pill active" data-value="Any">Any</button>
+            <button class="circle-pill" data-value="1">1</button>
+            <button class="circle-pill" data-value="2">2</button>
+            <button class="circle-pill" data-value="3">3</button>
+            <button class="circle-pill" data-value="4">4</button>
+            <button class="circle-pill" data-value="+5">+5</button>
+          </div>
+        </div>
+
+        <!-- 9. Property Type -->
+        <div>
+          <div class="drawer-section-label">Property Type</div>
+          <select id="filter-type-select" class="gray-capsule-select">
+            <option value="">Select</option>
+            <option value="Apartment">Apartment</option>
+            <option value="Ground Floor">Ground Floor</option>
+            <option value="Chalet">Chalet</option>
+            <option value="Penthouse">Penthouse</option>
+            <option value="Villa">Villa</option>
+            <option value="Twin House">Twin House</option>
+          </select>
+        </div>
+
+        <!-- 10. Area -->
+        <div>
+          <div class="drawer-section-label">Area</div>
+          <div class="teal-range-pair">
+            <input type="text" class="teal-capsule-input" placeholder="From" id="filter-area-from">
+            <span class="colon-sep">:</span>
+            <input type="text" class="teal-capsule-input" placeholder="To" id="filter-area-to">
+          </div>
+        </div>
+
+        <!-- 11. Floor -->
+        <div>
+          <div class="drawer-section-label">Floor</div>
+          <select id="filter-floor-select" class="gray-capsule-select">
+            <option value="">Select</option>
+            <option value="Ground">Ground</option>
+            <option value="1st">1st Floor</option>
+            <option value="2nd">2nd Floor</option>
+            <option value="3rd">3rd Floor</option>
+            <option value="4th">4th Floor</option>
+            <option value="Penthouse">Roof / Penthouse</option>
+          </select>
+        </div>
+
+        <!-- 12. Finishing -->
+        <div>
+          <div class="drawer-section-label">Finishing</div>
+          <select id="filter-finishing-select" class="gray-capsule-select">
+            <option value="">Select</option>
+            <option value="Fully Finished">Fully Finished</option>
+            <option value="Semi Finished">Semi Finished</option>
+            <option value="Core & Shell">Core & Shell</option>
+          </select>
+        </div>
+
+        <!-- 13. Delivery Date -->
+        <div>
+          <div class="drawer-section-label">Delivery Date</div>
+          <select id="filter-delivery-select" class="gray-capsule-select">
+            <option value="">Select</option>
+            <option value="Ready To Move">Ready To Move</option>
+            <option value="2026">2026</option>
+            <option value="2027">2027</option>
+            <option value="2028">2028</option>
+          </select>
+        </div>
+
+        <!-- 14. License -->
+        <div>
+          <div class="drawer-section-label">License</div>
+          <div class="license-switches-list">
+            <div class="license-switch-item">
+              <span>Basic</span>
+              <input type="checkbox" class="toggle-pill-switch" value="Basic">
+            </div>
+            <div class="license-switch-item" style="color: var(--badge-featured);">
+              <span>Featured</span>
+              <input type="checkbox" class="toggle-pill-switch" value="Featured">
+            </div>
+            <div class="license-switch-item" style="color: var(--badge-premium);">
+              <span>Premium</span>
+              <input type="checkbox" class="toggle-pill-switch" value="Premium">
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Drawer Bottom Action Button -->
+      <div class="drawer-bottom-sticky-bar">
+        <button id="apply-filter-btn" class="btn-app-solid-teal-filter">Filter</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PROFESSIONAL EXECUTIVE FOOTER (#0B0F17) -->
+  <footer class="site-footer">
+    <div class="container">
+      
+      <!-- Top Brand & Newsletter Banner -->
+      <div class="footer-top-banner">
+        <div class="footer-brand-col">
+          <div class="footer-brand-logo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            <span>TAP EGYPT</span>
+          </div>
+          <p class="footer-brand-desc">
+            Egypt’s premier digital real estate marketplace. Verified resale deals, primary launches, and direct owner listings across Sheikh Zayed, New Cairo, and North Coast.
+          </p>
+        </div>
+
+        <div class="footer-newsletter-col">
+          <span class="newsletter-title">Subscribe for Market Alerts & Price Drops</span>
+          <div class="newsletter-input-wrap">
+            <input type="email" placeholder="Enter your email address..." class="footer-newsletter-input">
+            <button class="footer-newsletter-btn" onclick="app.showToast('Subscribed to TAP EGYPT Price Alerts!')">
+              Subscribe
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main 5-Column Grid -->
+      <div class="footer-main-grid">
+        
+        <!-- Column 1: Properties & Search -->
+        <div class="footer-col">
+          <h3 class="footer-col-head">Properties</h3>
+          <ul class="footer-links-list">
+            <li onclick="window.location.hash='#/properties'">Resale Units</li>
+            <li onclick="window.location.hash='#/properties'">Primary Launches</li>
+            <li onclick="app.setMode('rent'); window.location.hash='#/properties';">For Rent</li>
+            <li onclick="window.location.hash='#/properties'">Ready to Move</li>
+            <li onclick="app.openListPropertyModal()">List Property</li>
+          </ul>
+        </div>
+
+        <!-- Column 2: Popular Locations -->
+        <div class="footer-col">
+          <h3 class="footer-col-head">Locations</h3>
+          <ul class="footer-links-list">
+            <li onclick="app.filterByLocation('El Sheikh Zayed')">Sheikh Zayed</li>
+            <li onclick="app.filterByLocation('New Cairo')">New Cairo</li>
+            <li onclick="app.filterByLocation('North Coast')">North Coast</li>
+            <li onclick="app.filterByLocation('6 October')">6th of October</li>
+            <li onclick="app.filterByLocation('El Sokhna')">Ain El Sokhna</li>
+          </ul>
+        </div>
+
+        <!-- Column 3: Top Master Developers -->
+        <div class="footer-col">
+          <h3 class="footer-col-head">Developers</h3>
+          <ul class="footer-links-list">
+            <li onclick="app.filterByDeveloper('SODIC')">SODIC</li>
+            <li onclick="app.filterByDeveloper('Mountain View')">Mountain View</li>
+            <li onclick="app.filterByDeveloper('Palm Hills')">Palm Hills</li>
+            <li onclick="app.filterByDeveloper('Emaar Misr')">Emaar Misr</li>
+            <li onclick="app.filterByDeveloper('City Edge')">City Edge</li>
+          </ul>
+        </div>
+
+        <!-- Column 4: Mobile App -->
+        <div class="footer-col">
+          <h3 class="footer-col-head">Get The App</h3>
+          <p style="font-size: 13px; color: #94A3B8; margin-bottom: 14px; line-height: 1.4;">Available for iOS & Android</p>
+          <div class="footer-store-btns">
+            <a href="https://apps.apple.com/eg/app/tap-egypt/id1586677400" target="_blank" rel="noopener noreferrer" class="footer-store-btn" style="text-decoration: none;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.32c.67-.82 1.13-1.97.99-3.12-.98.04-2.19.66-2.88 1.47-.62.73-1.16 1.91-1.01 3.03 1.1.09 2.23-.55 2.9-1.38z"/></svg>
+              <span>App Store</span>
+            </a>
+            <a href="https://play.google.com/store/apps/details?id=com.triplea.TripleAProperties" target="_blank" rel="noopener noreferrer" class="footer-store-btn" style="text-decoration: none;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3.6 1.9c-.3.3-.4.8-.4 1.4v17.4c0 .6.1 1.1.4 1.4l.1.1 9.7-9.7v-.2L3.7 1.8l-.1.1zm12.3 8.7L13.2 8 3.6.4c.4-.2.8-.2 1.3 0l11 6.2zM13.2 16l2.7-1.6-11 6.2c-.5.2-.9.2-1.3 0L13.2 16zm2.8-3.2l3.4-1.9c.8-.4.8-1.2 0-1.6l-3.4-1.9-2.9 2.9 2.9 2.5z"/></svg>
+              <span>Google Play</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Column 5: Get In Touch & Socials -->
+        <div class="footer-col">
+          <h3 class="footer-col-head">Get In Touch</h3>
+          
+          <a href="tel:+201113555557" class="footer-contact-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <span>+20 111 355 5557</span>
+          </a>
+
+          <a href="mailto:admin@tripleaprop.com" class="footer-contact-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <span>admin@tripleaprop.com</span>
+          </a>
+
+          <div class="footer-social-block">
+            <span class="social-label">Follow Us</span>
+            <div class="footer-social-icons">
+              <a href="https://www.facebook.com/tripleapropertiess/?ref=NONE_xav_ig_profile_page_web#" target="_blank" rel="noopener noreferrer" class="footer-social-btn" title="Follow us on Facebook">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+              </a>
+              <a href="https://www.instagram.com/tapegyptt/" target="_blank" rel="noopener noreferrer" class="footer-social-btn" title="Follow us on Instagram">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Bottom Row: Copyright & Legal -->
+      <div class="footer-bottom-row">
+        <div class="footer-copyright">
+          © 2026 TAP EGYPT Marketplace Inc. All rights reserved.
+        </div>
+
+        <div class="footer-legal-links">
+          <a href="javascript:void(0)" onclick="app.showToast('Privacy Policy requested')">Privacy Policy</a>
+          <span class="dot-sep">•</span>
+          <a href="javascript:void(0)" onclick="app.showToast('Terms of Service requested')">Terms of Service</a>
+          <span class="dot-sep">•</span>
+          <a href="javascript:void(0)" onclick="app.showToast('Security Verification requested')">Security & Verification</a>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
