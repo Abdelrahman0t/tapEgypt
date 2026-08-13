@@ -30,7 +30,20 @@ const TAP_EGYPT_DATA = {
       gallery: [
         "images/sodic_vye.png",
         "images/zed_west.png",
-        "images/mountain_view.png"
+        "images/mountain_view.png",
+        "images/seashell_playa.png",
+        "images/azha_north_coast.png",
+        "images/luxury_hero_villa.png",
+        "images/sodic_vye.png",
+        "images/zed_west.png",
+        "images/mountain_view.png",
+        "images/seashell_playa.png",
+        "images/azha_north_coast.png",
+        "images/luxury_hero_villa.png",
+        "images/sodic_vye.png",
+        "images/zed_west.png",
+        "images/mountain_view.png",
+        "images/luxury_hero_villa.png"
       ],
       features: ["2 Bedrooms", "2 Bathrooms", "Garden", "Landscape"],
       notes: `Vye - sodic ✨\nGround apartment\n116 m + 40 m Garden\n2 Bedrooms\n2 Bathrooms\nReady to move\nFully finished\n\nRemaining 2,823,000\nTotal 8,428,000\nNext installment 9-2026 (188,245)\n\nRemaining installment club\n(77,694)\n\nNext installment club 9-2026 (38,847)\n\n+Buyer Commission 1.5%\n+transfer fees 50k`,
@@ -77,7 +90,9 @@ const TAP_EGYPT_DATA = {
       image: "images/seashell_playa.png",
       gallery: [
         "images/seashell_playa.png",
-        "images/azha_north_coast.png"
+        "images/azha_north_coast.png",
+        "images/luxury_hero_villa.png",
+        "images/sodic_vye.png"
       ],
       features: ["3 Bedrooms", "3 Bathrooms", "Sea View", "Fully Furnished"],
       notes: `NEWGIZA - SEASHELL PLAYA ✨\nHaze Chalet - First Row Lagoon\n185 m² Prime location\n3 Bedrooms + Nanny Room\n3 Bathrooms\nReady to move immediately\nFully finished with ACs\n\nRemaining 2,160,000 EGP\nTotal 19,000,000 EGP\n\n+Buyer Commission 1.5%`,
@@ -124,7 +139,8 @@ const TAP_EGYPT_DATA = {
       image: "images/zed_west.png",
       gallery: [
         "images/zed_west.png",
-        "images/sodic_vye.png"
+        "images/sodic_vye.png",
+        "images/mountain_view.png"
       ],
       features: ["3 Bedrooms", "2 Bathrooms", "Elevator", "Security"],
       notes: `Bliss Gate Sheikh Zayed\nApartment 145 m²\n3 Bedrooms, 2 Bathrooms\nSemi Finished\nDelivery Q4 2026\nDownpayment 4,257,327 EGP\nTotal 7,887,863 EGP`,

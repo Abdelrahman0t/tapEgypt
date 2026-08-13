@@ -551,12 +551,8 @@ class TapEgyptApp {
           <!-- Flush Corner Badge Tag -->
           <span class="app-card-badge ${badgeClass}">${badgeText}</span>
 
-          <!-- Top Right Hover Action Buttons (Share & Heart) -->
+          <!-- Top Right Heart Action Button -->
           <div class="app-card-top-actions">
-            <button class="app-card-action-btn app-card-share-btn" onclick="app.shareProperty('${property.slug}', event)" title="Share Property">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-            </button>
-
             <button class="app-card-action-btn app-card-heart-btn ${isWishlisted ? 'active' : ''}" data-id="${property.id}"
               onclick="app.toggleWishlist('${property.id}', event)" title="Save to Wishlist">
               <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
@@ -730,9 +726,10 @@ class TapEgyptApp {
       cards.forEach(card => card.style.transition = '');
     }
 
-    const slidePercentage = 78;
-    const gapPercentage = 2.5;
-    const centerOffset = (100 - slidePercentage) / 2; // 11%
+    const isMobile = window.innerWidth <= 768;
+    const slidePercentage = isMobile ? 85 : 78;
+    const gapPercentage = isMobile ? 3 : 2.5;
+    const centerOffset = (100 - slidePercentage) / 2;
     const offset = centerOffset - this.activeSlotIndex * (slidePercentage + gapPercentage);
 
     track.style.transform = `translateX(${offset}%)`;
@@ -884,45 +881,16 @@ class TapEgyptApp {
     const target = document.getElementById('detail-view-target');
     if (!target) return;
 
-    const isWishlisted = this.wishlist.has(property.id);
-    const subImg1 = property.gallery && property.gallery[1] ? property.gallery[1] : 'images/zed_west.png';
-    const subImg2 = property.gallery && property.gallery[2] ? property.gallery[2] : 'images/mountain_view.png';
+    this.activeDetailProperty = property;
+    this.detailGallerySlide = 0;
+
+    const galleryHTML = this.buildDetailGalleryHTML(property, 0);
 
     target.innerHTML = `
       <div style="max-width: 1200px; margin: 0 auto;">
         
-        <!-- Desktop Gallery -->
-        <div class="detail-desktop-gallery-grid">
-          <!-- Floating Action Buttons -->
-          <div class="gallery-floating-left">
-            <button class="circle-desktop-action-btn" onclick="window.history.back()" title="Back">
-              <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
-            </button>
-          </div>
-
-          <div class="gallery-floating-right">
-            <button class="circle-desktop-action-btn" title="Download PDF" onclick="app.downloadPropertyPDF('${property.id}')">
-              <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
-            </button>
-            <button class="circle-desktop-action-btn" title="Share" onclick="app.shareProperty('${property.id}')">
-              <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
-            </button>
-            <button class="circle-desktop-action-btn ${isWishlisted ? 'active' : ''}" onclick="app.toggleWishlist('${property.id}', event)" title="Save">
-              <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-            </button>
-          </div>
-
-          <!-- Main 70% Image -->
-          <div class="gallery-main-col">
-            <img src="${property.image}" alt="${property.title}">
-          </div>
-
-          <!-- Sub 30% Thumbnails Column -->
-          <div class="gallery-sub-col">
-            <img src="${subImg1}" alt="${property.title} View 2">
-            <img src="${subImg2}" alt="${property.title} View 3">
-          </div>
-        </div>
+        <!-- Desktop Dynamic Gallery (1-16 Photos, 4x4 Slider) -->
+        ${galleryHTML}
 
         <!-- Property Header Block -->
         <div class="detail-header-block">
@@ -1215,6 +1183,215 @@ class TapEgyptApp {
   closeBlogModal() {
     const overlay = document.getElementById('blog-modal-overlay');
     if (overlay) overlay.classList.remove('open');
+  }
+
+  // DYNAMIC GALLERY GRID & 4x4 SLIDER ENGINE
+  buildDetailGalleryHTML(property, slideIndex = 0) {
+    const isWishlisted = this.wishlist.has(property.id);
+    const gallery = (property.gallery && property.gallery.length > 0) ? property.gallery : [property.image];
+    const totalPhotos = gallery.length;
+    const pageSize = 4;
+    const totalSlides = Math.ceil(totalPhotos / pageSize);
+    const currentSlide = Math.max(0, Math.min(slideIndex, totalSlides - 1));
+    const startIdx = currentSlide * pageSize;
+    const currentGroup = gallery.slice(startIdx, startIdx + pageSize);
+
+    let gridContentHTML = '';
+
+    if (currentGroup.length === 1) {
+      gridContentHTML = `
+        <div class="gallery-layout-single" onclick="app.openLightbox(${startIdx})">
+          <img src="${currentGroup[0]}" alt="${property.title}">
+        </div>
+      `;
+    } else if (currentGroup.length === 2) {
+      gridContentHTML = `
+        <div class="gallery-layout-two">
+          <div class="gallery-item-wrap" onclick="app.openLightbox(${startIdx})">
+            <img src="${currentGroup[0]}" alt="${property.title} 1">
+          </div>
+          <div class="gallery-item-wrap" onclick="app.openLightbox(${startIdx + 1})">
+            <img src="${currentGroup[1]}" alt="${property.title} 2">
+          </div>
+        </div>
+      `;
+    } else if (currentGroup.length === 3) {
+      gridContentHTML = `
+        <div class="gallery-layout-grid-3">
+          <div class="gallery-grid-item" onclick="app.openLightbox(${startIdx})">
+            <img src="${currentGroup[0]}" alt="${property.title} 1">
+          </div>
+          <div class="gallery-grid-item" onclick="app.openLightbox(${startIdx + 1})">
+            <img src="${currentGroup[1]}" alt="${property.title} 2">
+          </div>
+          <div class="gallery-grid-item item-span-full" onclick="app.openLightbox(${startIdx + 2})">
+            <img src="${currentGroup[2]}" alt="${property.title} 3">
+          </div>
+        </div>
+      `;
+    } else {
+      // 4 photos in complete group (2 in a row!)
+      const remainingCount = totalPhotos - (startIdx + 4);
+      const showMoreOverlay = remainingCount > 0;
+
+      gridContentHTML = `
+        <div class="gallery-layout-grid-2x2">
+          <div class="gallery-grid-item" onclick="app.openLightbox(${startIdx})">
+            <img src="${currentGroup[0]}" alt="${property.title} 1">
+          </div>
+          <div class="gallery-grid-item" onclick="app.openLightbox(${startIdx + 1})">
+            <img src="${currentGroup[1]}" alt="${property.title} 2">
+          </div>
+          <div class="gallery-grid-item" onclick="app.openLightbox(${startIdx + 2})">
+            <img src="${currentGroup[2]}" alt="${property.title} 3">
+          </div>
+          <div class="gallery-grid-item" onclick="app.openLightbox(${startIdx + 3})">
+            <img src="${currentGroup[3]}" alt="${property.title} 4">
+          </div>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="detail-desktop-gallery-wrapper">
+        <!-- Top Action Buttons -->
+        <div class="gallery-floating-left">
+          <button class="circle-desktop-action-btn" onclick="window.history.back()" title="Back">
+            <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+          </button>
+        </div>
+
+        <div class="gallery-floating-right">
+          <button class="circle-desktop-action-btn" title="Download PDF" onclick="app.downloadPropertyPDF('${property.id}')">
+            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+          </button>
+          <button class="circle-desktop-action-btn" title="Share" onclick="app.shareProperty('${property.id}')">
+            <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
+          </button>
+          <button class="circle-desktop-action-btn ${isWishlisted ? 'active' : ''}" onclick="app.toggleWishlist('${property.id}', event)" title="Save">
+            <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          </button>
+        </div>
+
+        <!-- Dynamic Grid Content -->
+        <div class="detail-gallery-grid-container">
+          ${gridContentHTML}
+        </div>
+
+        <!-- Prev / Next Slider Floating Arrows -->
+        ${totalSlides > 1 ? `
+          <button class="gallery-slider-arrow prev-arrow ${currentSlide === 0 ? 'disabled' : ''}" onclick="app.changeGallerySlide(-1)" title="Previous Group">
+            <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+          </button>
+          <button class="gallery-slider-arrow next-arrow ${currentSlide === totalSlides - 1 ? 'disabled' : ''}" onclick="app.changeGallerySlide(1)" title="Next Group">
+            <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+          </button>
+        ` : ''}
+
+        <!-- Bottom Controls Bar -->
+        <div class="gallery-bottom-controls">
+          <div></div> <!-- Spacer -->
+
+          <button class="gallery-view-all-btn" onclick="app.openLightbox(${startIdx})">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>
+            <span>View All Photos (${totalPhotos})</span>
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  changeGallerySlide(dir) {
+    if (!this.activeDetailProperty) return;
+    const gallery = (this.activeDetailProperty.gallery && this.activeDetailProperty.gallery.length > 0) ? this.activeDetailProperty.gallery : [this.activeDetailProperty.image];
+    const totalSlides = Math.ceil(gallery.length / 4);
+    
+    let newSlide = (this.detailGallerySlide || 0) + dir;
+    if (newSlide < 0) newSlide = totalSlides - 1;
+    if (newSlide >= totalSlides) newSlide = 0;
+    
+    this.detailGallerySlide = newSlide;
+    const galleryWrap = document.querySelector('.detail-desktop-gallery-wrapper');
+    if (galleryWrap) {
+      galleryWrap.outerHTML = this.buildDetailGalleryHTML(this.activeDetailProperty, this.detailGallerySlide);
+    }
+  }
+
+  // FULLSCREEN LIGHTBOX GALLERY MODAL
+  openLightbox(index = 0) {
+    if (!this.activeDetailProperty) return;
+    const gallery = (this.activeDetailProperty.gallery && this.activeDetailProperty.gallery.length > 0) ? this.activeDetailProperty.gallery : [this.activeDetailProperty.image];
+    this.lightboxIndex = index;
+
+    let lightboxEl = document.getElementById('gallery-lightbox-modal');
+    if (!lightboxEl) {
+      lightboxEl = document.createElement('div');
+      lightboxEl.id = 'gallery-lightbox-modal';
+      lightboxEl.className = 'gallery-lightbox-modal';
+      document.body.appendChild(lightboxEl);
+    }
+
+    this.renderLightboxContent(gallery);
+  }
+
+  renderLightboxContent(gallery) {
+    const lightboxEl = document.getElementById('gallery-lightbox-modal');
+    if (!lightboxEl) return;
+
+    const currentImg = gallery[this.lightboxIndex] || gallery[0];
+    const total = gallery.length;
+
+    lightboxEl.innerHTML = `
+      <div class="lightbox-overlay" onclick="app.closeLightbox()"></div>
+      <div class="lightbox-content-container">
+        <div class="lightbox-header">
+          <span class="lightbox-counter">Photo ${this.lightboxIndex + 1} of ${total} — ${this.activeDetailProperty.title}</span>
+          <button class="lightbox-close-btn" onclick="app.closeLightbox()">&times;</button>
+        </div>
+
+        <div class="lightbox-main-stage">
+          ${total > 1 ? `
+            <button class="lightbox-nav-btn prev" onclick="app.stepLightbox(-1)">&#10094;</button>
+          ` : ''}
+          <img src="${currentImg}" class="lightbox-active-img" alt="Photo ${this.lightboxIndex + 1}">
+          ${total > 1 ? `
+            <button class="lightbox-nav-btn next" onclick="app.stepLightbox(1)">&#10095;</button>
+          ` : ''}
+        </div>
+
+        ${total > 1 ? `
+          <div class="lightbox-thumb-strip">
+            ${gallery.map((img, idx) => `
+              <div class="lightbox-thumb-item ${idx === this.lightboxIndex ? 'active' : ''}" onclick="app.setLightboxIndex(${idx})">
+                <img src="${img}" alt="Thumb ${idx + 1}">
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
+      </div>
+    `;
+    lightboxEl.classList.add('open');
+  }
+
+  stepLightbox(dir) {
+    if (!this.activeDetailProperty) return;
+    const gallery = (this.activeDetailProperty.gallery && this.activeDetailProperty.gallery.length > 0) ? this.activeDetailProperty.gallery : [this.activeDetailProperty.image];
+    let newIdx = this.lightboxIndex + dir;
+    if (newIdx < 0) newIdx = gallery.length - 1;
+    if (newIdx >= gallery.length) newIdx = 0;
+    this.lightboxIndex = newIdx;
+    this.renderLightboxContent(gallery);
+  }
+
+  setLightboxIndex(idx) {
+    this.lightboxIndex = idx;
+    const gallery = (this.activeDetailProperty.gallery && this.activeDetailProperty.gallery.length > 0) ? this.activeDetailProperty.gallery : [this.activeDetailProperty.image];
+    this.renderLightboxContent(gallery);
+  }
+
+  closeLightbox() {
+    const lightboxEl = document.getElementById('gallery-lightbox-modal');
+    if (lightboxEl) lightboxEl.classList.remove('open');
   }
 }
 

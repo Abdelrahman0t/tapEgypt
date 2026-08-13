@@ -863,6 +863,10 @@ button, input, select, textarea {
   min-height: 60px;
 }
 
+.hero-actions-mobile-group {
+  display: contents;
+}
+
 /* Search field groups for Houzez-style labeled fields */
 .search-field-group {
   display: flex;
@@ -1476,96 +1480,135 @@ button, input, select, textarea {
 }
 
 .app-showcase-img-col {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 3D PERSPECTIVE FLIP PHONE CARD */
+.phone-flip-card {
+  background-color: transparent;
+  width: 320px;
+  height: 480px;
+  perspective: 1000px;
+  cursor: pointer;
+}
+
+.phone-flip-inner {
   position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* FLOATING QR CODE BADGE (DESKTOP & MEDIUM SCREENS ONLY) */
-.app-qr-code-card {
-  position: absolute;
-  top: 10px;
-  right: -20px;
-  z-index: 10;
-  background: #FFFFFF;
-  border: 1px solid #E2E8F0;
-  border-radius: 20px;
-  padding: 14px 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.12);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-  user-select: none;
-}
-
-.app-qr-code-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 44px rgba(14, 124, 121, 0.18);
-  border-color: var(--teal-primary);
-}
-
-.qr-code-img-wrap {
-  width: 96px;
-  height: 96px;
-  background: #FFFFFF;
-  border-radius: 12px;
-  padding: 6px;
-  border: 1px solid #F1F5F9;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.04);
-}
-
-.qr-code-text-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  width: 100%;
+  height: 100%;
   text-align: center;
+  transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-style: preserve-3d;
 }
 
-.qr-title {
-  font-size: 12px;
-  font-weight: 800;
-  color: #0F172A;
-  letter-spacing: -0.2px;
-  white-space: nowrap;
+.phone-flip-card:hover .phone-flip-inner {
+  transform: rotateY(180deg);
 }
 
-.qr-sub {
-  font-size: 10.5px;
-  font-weight: 500;
-  color: #64748B;
-  white-space: nowrap;
+.phone-flip-front, .phone-flip-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 36px;
 }
 
-@media (max-width: 1024px) {
-  .app-qr-code-card {
-    right: 0px;
-    top: -10px;
-  }
-}
-
-@media (max-width: 768px) {
-  .desktop-only-qr,
-  .app-qr-code-card {
-    display: none !important;
-  }
+/* Front: Phone Mockup & Hover Micro-Hint Pill */
+.phone-flip-front {
+  background: transparent;
 }
 
 .app-phone-preview-img {
   width: 100%;
-  max-width: 320px;
+  max-width: 290px;
   mix-blend-mode: multiply;
   filter: drop-shadow(0 22px 40px rgba(15, 23, 42, 0.13));
   transition: transform 0.3s ease;
 }
 
-.app-phone-preview-img:hover {
-  transform: translateY(-4px);
+.phone-hover-hint {
+  margin-top: -12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  color: var(--teal-primary);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+  transition: all 0.25s ease;
+}
+
+.phone-flip-card:hover .phone-hover-hint {
+  opacity: 0;
+}
+
+/* Back: Executive Floating QR Card */
+.phone-flip-back {
+  background: linear-gradient(145deg, #0F172A 0%, #1E293B 100%);
+  color: #FFFFFF;
+  transform: rotateY(180deg);
+  border: 1px solid #334155;
+  box-shadow: 0 24px 48px rgba(15, 23, 42, 0.22);
+  padding: 32px 24px;
+}
+
+.phone-back-qr-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.phone-back-qr-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.qr-title-bold {
+  font-size: 18px;
+  font-weight: 800;
+  color: #FFFFFF;
+  letter-spacing: -0.3px;
+}
+
+.qr-sub-text {
+  font-size: 13px;
+  color: #94A3B8;
+}
+
+.qr-code-vector-box {
+  background: #FFFFFF;
+  padding: 14px;
+  border-radius: 20px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+  transition: transform 0.3s ease;
+}
+
+.phone-flip-card:hover .qr-code-vector-box {
+  transform: scale(1.05);
+}
+
+.phone-back-qr-footer {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--teal-primary);
+  background: rgba(14, 124, 121, 0.15);
+  border: 1px solid rgba(14, 124, 121, 0.3);
+  padding: 6px 14px;
+  border-radius: 12px;
 }
 
 .app-showcase-content-col {
@@ -2138,38 +2181,455 @@ button, input, select, textarea {
   padding: 84px 0 70px;
 }
 
-.detail-desktop-gallery-grid {
+/* ==========================================================================
+   DYNAMIC 1-16 PHOTO GALLERY & 4x4 SLIDER SYSTEM FOR PROPERTY DETAIL VIEW
+   ========================================================================== */
+.detail-desktop-gallery-wrapper {
   position: relative;
+  width: 100%;
+  margin-bottom: 24px;
+  user-select: none;
+}
+
+.detail-gallery-grid-container {
   height: 480px;
   width: 100%;
-  border-radius: 16px;
+  border-radius: 20px;
   overflow: hidden;
-  display: grid;
-  grid-template-columns: 7fr 3fr;
-  gap: 6px;
-  margin-bottom: 24px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  box-shadow: 0 12px 36px rgba(15, 23, 42, 0.1);
+  background-color: #0F172A;
 }
 
-.gallery-main-col {
-  position: relative;
+/* 1 Photo Layout */
+.gallery-layout-single {
+  width: 100%;
   height: 100%;
+  cursor: pointer;
 }
-
-.gallery-main-col img {
+.gallery-layout-single img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.gallery-sub-col {
+/* 2 Photos Layout */
+.gallery-layout-two {
   display: grid;
-  grid-template-rows: 1fr 1fr;
-  gap: 6px;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
   height: 100%;
 }
+.gallery-layout-two .gallery-item-wrap {
+  height: 100%;
+  cursor: pointer;
+  overflow: hidden;
+}
+.gallery-layout-two img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+.gallery-layout-two .gallery-item-wrap:hover img {
+  transform: scale(1.03);
+}
 
-.gallery-sub-col img {
+/* 3 Photos Layout (2 Top, 1 Bottom Full Width) */
+.gallery-layout-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 8px;
+  height: 100%;
+  min-height: 0;
+}
+.gallery-layout-grid-3 .item-span-full {
+  grid-column: span 2;
+}
+
+/* 4 Photos Layout (2 in a row, 2x2 Equal Grid!) */
+.gallery-layout-grid-2x2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 8px;
+  height: 100%;
+  min-height: 0;
+}
+
+.gallery-grid-item {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  min-height: 0;
+  min-width: 0;
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 4px;
+}
+.gallery-grid-item img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.gallery-grid-item:hover img {
+  transform: scale(1.03);
+}
+
+/* More Photos Badge Overlay */
+.gallery-more-count-badge {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.76);
+  backdrop-filter: blur(4px);
+  color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  z-index: 10;
+}
+.gallery-grid-item:hover .gallery-more-count-badge {
+  background: rgba(14, 124, 121, 0.88);
+}
+.gallery-more-count-badge span {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+.gallery-more-count-badge small {
+  font-size: 11px;
+  opacity: 0.85;
+  font-weight: 600;
+}
+
+/* Floating Slider Prev / Next Arrows */
+.gallery-slider-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 25;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.gallery-slider-arrow:hover:not(.disabled) {
+  background: var(--teal-primary);
+  color: #FFFFFF;
+  border-color: var(--teal-primary);
+  transform: translateY(-50%) scale(1.08);
+}
+.gallery-slider-arrow.disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.gallery-slider-arrow.prev-arrow {
+  left: 20px;
+}
+.gallery-slider-arrow.next-arrow {
+  right: 20px;
+}
+.gallery-slider-arrow svg {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+}
+
+/* Gallery Bottom Control Bar */
+.gallery-bottom-controls {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+}
+.gallery-photo-count-pill {
+  pointer-events: auto;
+  background: rgba(15, 23, 42, 0.78);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+  padding: 6px 14px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Compact "View All Photos" Badge */
+.gallery-view-all-btn {
+  pointer-events: auto;
+  background: rgba(15, 23, 42, 0.82);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #FFFFFF;
+  padding: 5px 12px;
+  border-radius: 14px;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.gallery-view-all-btn svg {
+  width: 12px;
+  height: 12px;
+}
+.gallery-view-all-btn:hover {
+  background: var(--teal-primary);
+  border-color: var(--teal-primary);
+}
+
+/* ==========================================================================
+   MOBILE HORIZONTAL SCROLL CAROUSEL (Matching photo_2026-08-11_16-12-47 (2).jpg)
+   ========================================================================== */
+@media (max-width: 768px) {
+  .detail-page-container {
+    padding: 60px 0 30px !important;
+  }
+
+  #detail-view-target.container {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  .detail-desktop-gallery-wrapper {
+    margin-top: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    margin-bottom: 16px !important;
+  }
+
+  .detail-header-block,
+  .detail-desktop-body-grid {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  .detail-gallery-grid-container {
+    height: 320px;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  /* Turn all layouts into a 1-Image Horizontal Swipe Track */
+  .gallery-layout-grid-2x2,
+  .gallery-layout-grid-3,
+  .gallery-layout-two,
+  .gallery-layout-single {
+    display: flex !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    scroll-behavior: smooth !important;
+    gap: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .gallery-layout-grid-2x2::-webkit-scrollbar,
+  .gallery-layout-grid-3::-webkit-scrollbar,
+  .gallery-layout-two::-webkit-scrollbar,
+  .gallery-layout-single::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Each photo takes 100% width on mobile view */
+  .gallery-grid-item,
+  .gallery-item-wrap,
+  .gallery-main-item,
+  .gallery-layout-single,
+  .item-span-full {
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    height: 100% !important;
+    scroll-snap-align: start !important;
+    scroll-snap-stop: always !important;
+    border-radius: 0 !important;
+  }
+
+  .gallery-grid-item img,
+  .gallery-item-wrap img,
+  .gallery-main-item img,
+  .gallery-layout-single img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    border-radius: 0 !important;
+  }
+
+  /* Floating Action Buttons on Mobile Gallery */
+  .gallery-floating-left {
+    top: 12px;
+    left: 12px;
+  }
+  .gallery-floating-left .circle-desktop-action-btn {
+    background: rgba(14, 124, 121, 0.85) !important;
+    backdrop-filter: blur(4px);
+    border: none;
+    color: #FFFFFF !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+  .gallery-floating-left .circle-desktop-action-btn svg {
+    fill: #FFFFFF !important;
+  }
+
+  .gallery-floating-right {
+    top: 12px;
+    right: 12px;
+    gap: 6px;
+  }
+  .gallery-floating-right .circle-desktop-action-btn {
+    background: #FFFFFF !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+  }
+
+  /* Hide Desktop Slider Arrow Buttons on Touch Screens */
+  .gallery-slider-arrow {
+    display: none !important;
+  }
+}
+.page-num-tag {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+}
+
+/* Lightbox Modal */
+.gallery-lightbox-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.gallery-lightbox-modal.open {
+  display: flex;
+}
+.lightbox-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(11, 15, 23, 0.94);
+  backdrop-filter: blur(12px);
+}
+.lightbox-content-container {
+  position: relative;
+  z-index: 10;
+  width: 92vw;
+  max-width: 1200px;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+.lightbox-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  color: #FFFFFF;
+}
+.lightbox-counter {
+  font-size: 16px;
+  font-weight: 700;
+}
+.lightbox-close-btn {
+  background: transparent;
+  border: none;
+  color: #FFFFFF;
+  font-size: 32px;
+  cursor: pointer;
+  line-height: 1;
+}
+.lightbox-main-stage {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.lightbox-active-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+.lightbox-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.15);
+  color: #FFFFFF;
+  border: none;
+  font-size: 28px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.25s ease;
+}
+.lightbox-nav-btn:hover {
+  background: var(--teal-primary);
+}
+.lightbox-nav-btn.prev { left: 16px; }
+.lightbox-nav-btn.next { right: 16px; }
+
+.lightbox-thumb-strip {
+  display: flex;
+  gap: 10px;
+  padding: 16px 0;
+  overflow-x: auto;
+  justify-content: center;
+}
+.lightbox-thumb-item {
+  width: 70px;
+  height: 50px;
+  border-radius: 6px;
+  overflow: hidden;
+  opacity: 0.5;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+.lightbox-thumb-item.active,
+.lightbox-thumb-item:hover {
+  opacity: 1;
+  border-color: var(--teal-primary);
+}
+.lightbox-thumb-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -3328,6 +3788,520 @@ button, input, select, textarea {
 .app-card-price-line .price-val {
   font-weight: 800;
   color: #0F172A;
+}
+
+/* ==========================================================================
+   FULL SITE MOBILE RESPONSIVENESS & AUTHENTIC MOBILE PROPERTY CARDS
+   (Matching photo_2026-08-11_16-12-47.jpg)
+   ========================================================================== */
+@media (max-width: 768px) {
+  /* Catalog & Featured Grids on Mobile — 1 Column Full Width */
+  .properties-catalog-grid,
+  .app-resale-catalog-grid,
+  .app-cards-grid,
+  #featured-properties-target,
+  #our-featured-properties-target {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+    width: 100% !important;
+  }
+
+  /* Hero Section & Search Card on Mobile (Fixing background cutoff & card overflow) */
+  .product-hero-section {
+    min-height: auto !important;
+    padding-top: 84px !important;
+    padding-bottom: 36px !important;
+    overflow: hidden !important;
+  }
+
+  .hero-content-wrap {
+    padding: 0 16px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .hero-title-main {
+    font-size: 26px !important;
+    font-weight: 800 !important;
+    line-height: 1.25 !important;
+    margin-bottom: 10px !important;
+  }
+
+  .hero-paragraph-sub {
+    font-size: 13.5px !important;
+    line-height: 1.55 !important;
+    margin-bottom: 16px !important;
+    opacity: 0.9 !important;
+  }
+
+  /* Mobile Search Container — Contained inside Hero background */
+  .hero-search-overlap-container {
+    position: relative !important;
+    bottom: auto !important;
+    left: auto !important;
+    transform: none !important;
+    max-width: 100% !important;
+    padding: 0 16px !important;
+    margin-top: 8px !important;
+  }
+
+  .hero-search-card-exact {
+    border-radius: 20px !important;
+    padding: 16px 16px 20px !important;
+    box-shadow: 0 16px 36px rgba(15, 23, 42, 0.25) !important;
+  }
+
+  .hero-tab-pills-wrap {
+    border-radius: 12px 12px 0 0 !important;
+    padding: 4px 6px !important;
+  }
+
+  .hero-mode-pill {
+    padding: 7px 18px !important;
+    font-size: 12.5px !important;
+  }
+
+  .search-main-bar-row {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    min-height: auto !important;
+  }
+
+  .search-main-bar-row input,
+  .search-main-bar-row select {
+    width: 100% !important;
+    height: 44px !important;
+    font-size: 13.5px !important;
+    border-radius: 12px !important;
+  }
+
+  .hero-price-slider-box {
+    width: 100% !important;
+    padding: 10px 12px !important;
+    border-radius: 12px !important;
+    background: #F8FAFC !important;
+    border: 1px solid #E2E8F0 !important;
+  }
+
+  .hero-actions-mobile-group {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    width: 100% !important;
+    margin-top: 4px !important;
+  }
+
+  .hero-actions-mobile-group .btn-circle-filter-toggle {
+    width: 46px !important;
+    height: 46px !important;
+    flex-shrink: 0 !important;
+    border-radius: 12px !important;
+  }
+
+  .hero-actions-mobile-group .btn-teal-search-main {
+    flex: 1 !important;
+    height: 46px !important;
+    border-radius: 12px !important;
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    width: auto !important;
+  }
+
+  .marketplace-main-body {
+    padding-top: 36px !important;
+  }
+
+  /* Today's Offer Touch Swipe Carousel on Mobile (No Arrow Buttons Needed!) */
+  .todays-offer-section {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .todays-offer-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 6px !important;
+    margin-bottom: 14px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  .offer-slider-nav-btns {
+    display: none !important;
+  }
+
+  .peeking-carousel-wrapper {
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 6px 0;
+  }
+
+  .peeking-carousel-wrapper::-webkit-scrollbar {
+    display: none;
+  }
+
+  .peeking-offer-track {
+    display: flex !important;
+    transform: none !important;
+    gap: 12px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    width: max-content !important;
+  }
+
+  .peeking-offer-card {
+    flex: 0 0 85vw !important;
+    max-width: 340px !important;
+    height: 230px !important;
+    scroll-snap-align: center !important;
+    opacity: 1 !important;
+    transform: none !important;
+    border-radius: 20px !important;
+  }
+
+  /* Full Image Background Mobile Card (Matching photo_2026-08-11_16-12-47.jpg) */
+  .app-resale-card {
+    position: relative !important;
+    width: 100% !important;
+    height: 250px !important;
+    border-radius: 20px !important;
+    overflow: hidden !important;
+    background-color: #0F172A !important;
+    border: none !important;
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.14) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+  }
+
+  /* Photo Container with Dark Overlay */
+  .app-card-photo-wrap {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .app-card-photo-wrap img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+
+  /* Dark Overlay Gradient across entire image card */
+  .app-card-photo-wrap::after {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.35) 0%, rgba(11, 15, 23, 0.88) 100%) !important;
+    z-index: 2 !important;
+  }
+
+  /* Top Right Action Buttons Always Visible on Touch Devices */
+  .app-card-top-actions {
+    position: absolute !important;
+    top: 12px !important;
+    right: 12px !important;
+    z-index: 10 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+  }
+
+  .app-card-action-btn {
+    width: 36px !important;
+    height: 36px !important;
+    background: #FFFFFF !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+  }
+
+  /* Left Ribbon Badge */
+  .app-card-badge {
+    top: 12px !important;
+    left: 12px !important;
+    border-radius: 12px !important;
+    padding: 5px 14px !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    z-index: 10 !important;
+  }
+
+  /* Top Right Date & Stars on Mobile (No overlap with Heart Button) */
+  .app-card-image-hover-bar {
+    position: absolute !important;
+    top: 12px !important;
+    right: 54px !important;
+    bottom: auto !important;
+    left: auto !important;
+    background: transparent !important;
+    padding: 0 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    gap: 2px !important;
+    z-index: 10 !important;
+    pointer-events: none !important;
+  }
+
+  .app-card-date-hover {
+    font-size: 10px !important;
+    font-weight: 600 !important;
+    color: rgba(255, 255, 255, 0.95) !important;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9) !important;
+    white-space: nowrap !important;
+  }
+
+  .app-card-stars-hover {
+    color: #FBBF24 !important;
+    font-size: 10px !important;
+    letter-spacing: 1px !important;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9) !important;
+    white-space: nowrap !important;
+  }
+
+  /* Advanced Filter Panel Expansion on Mobile */
+  .hero-advanced-expandable-panel {
+    position: static !important;
+    margin-top: 14px !important;
+    padding: 16px !important;
+    border-radius: 16px !important;
+    box-shadow: none !important;
+    background: #F8FAFC !important;
+    border: 1px solid #E2E8F0 !important;
+  }
+
+  .advanced-dropdowns-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+  }
+
+  .amenities-checkboxes-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+
+  .mobile-nav-right-actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+
+  .mobile-menu-btn {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 4px !important;
+    cursor: pointer !important;
+  }
+
+  .mobile-menu-btn svg {
+    fill: #0E7C79 !important;
+  }
+
+  .nav-bell-wrapper {
+    display: block !important;
+  }
+}
+
+/* ==========================================================================
+   MEDIUM / TABLET SCREEN RESPONSIVENESS (769px - 1024px)
+   ========================================================================== */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .properties-catalog-grid,
+  .app-resale-catalog-grid,
+  .app-cards-grid,
+  #featured-properties-target,
+  #our-featured-properties-target {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 20px !important;
+    width: 100% !important;
+  }
+
+  .search-main-bar-row {
+    grid-template-columns: 1fr 1fr 1fr !important;
+    gap: 12px !important;
+  }
+
+  .hero-actions-mobile-group {
+    grid-column: span 3 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+  }
+
+  .product-hero-section {
+    min-height: 520px !important;
+    padding-bottom: 100px !important;
+  }
+
+  .hero-search-overlap-container {
+    max-width: 92% !important;
+  }
+
+  .footer-main-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 30px !important;
+  }
+}
+
+  /* White Body overlay at bottom of card */
+  .app-card-white-body {
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 10 !important;
+    background: transparent !important;
+    padding: 14px 16px 14px !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .app-card-title-main {
+    color: #FFFFFF !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9) !important;
+    margin-bottom: 2px !important;
+  }
+
+  .app-card-subtitle-type {
+    color: rgba(255, 255, 255, 0.85) !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    margin-bottom: 8px !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9) !important;
+  }
+
+  .app-card-details-grid {
+    border-top: none !important;
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+    display: flex !important;
+    align-items: flex-end !important;
+    justify-content: space-between !important;
+  }
+
+  .app-card-spec-line {
+    color: #FFFFFF !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8) !important;
+  }
+
+  .app-card-spec-line svg {
+    fill: #FFFFFF !important;
+  }
+
+  .app-card-price-line {
+    color: #FFFFFF !important;
+    font-size: 13px !important;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8) !important;
+  }
+
+  .app-card-price-line .price-lbl {
+    color: rgba(255, 255, 255, 0.85) !important;
+    font-weight: 500 !important;
+  }
+
+  .app-card-price-line .price-val {
+    color: #FFFFFF !important;
+    font-weight: 800 !important;
+  }
+
+  /* Fullsite Responsiveness for Hero, Showcase & Footer */
+  .app-fullwidth-grid {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+    text-align: center !important;
+  }
+
+  .app-showcase-content-col {
+    align-items: center !important;
+  }
+
+  .footer-main-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 24px !important;
+  }
+
+  .footer-top-banner {
+    flex-direction: column !important;
+    gap: 20px !important;
+  }
+}
+
+/* ==========================================================================
+   EXTRA SMALL MOBILE SCREENS (< 420px — e.g. 360px, 375px, iPhone SE, Galaxy)
+   ========================================================================== */
+@media (max-width: 420px) {
+  .app-resale-card {
+    height: 260px !important;
+  }
+
+  .app-card-white-body {
+    padding: 12px 14px 12px !important;
+  }
+
+  .app-card-title-main {
+    font-size: 15px !important;
+  }
+
+  .app-card-subtitle-type {
+    font-size: 12px !important;
+    margin-bottom: 6px !important;
+  }
+
+  .app-card-spec-line {
+    font-size: 11.5px !important;
+  }
+
+  .app-card-price-line {
+    font-size: 11.5px !important;
+  }
+
+  .app-card-price-line .price-lbl {
+    font-size: 11px !important;
+  }
+
+  .app-card-price-line .price-val {
+    font-size: 11.5px !important;
+  }
+
+  .app-card-image-hover-bar {
+    top: 10px !important;
+    right: 48px !important;
+  }
+
+  .app-card-date-hover {
+    font-size: 9.5px !important;
+  }
+
+  .app-card-stars-hover {
+    font-size: 9.5px !important;
+  }
+
+  .peeking-offer-card {
+    flex: 0 0 88vw !important;
+    height: 210px !important;
+  }
+
+  .detail-gallery-grid-container {
+    height: 280px !important;
+  }
+
+  .hz-section-title,
+  .todays-offer-title {
+    font-size: 20px !important;
+  }
 }
 
 
