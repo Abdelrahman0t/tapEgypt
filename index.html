@@ -33,7 +33,7 @@
 
       <!-- Navigation Links Structure -->
       <ul class="nav-links">
-        <li><a href="#/properties" class="nav-link active">Explore</a></li>
+        <li><a href="#/properties" class="nav-link active" onclick="app.setMode('all')">Explore</a></li>
         <li><a href="#/" class="nav-link">Offers</a></li>
         <li><a href="#/" class="nav-link" onclick="document.getElementById('explore-devs').scrollIntoView({behavior:'smooth'})">Developers</a></li>
         <li><a href="#/" class="nav-link">Blog</a></li>
@@ -134,7 +134,7 @@
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               List Property
             </div>
-            <div class="mobile-nav-dropdown-item" onclick="window.location.hash='#/properties'; document.getElementById('mobile-nav-dropdown').classList.remove('open');">
+            <div class="mobile-nav-dropdown-item" onclick="app.setMode('all'); window.location.hash='#/properties'; document.getElementById('mobile-nav-dropdown').classList.remove('open');">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
               Explore
             </div>
@@ -581,7 +581,7 @@
                   List your resale, rental, or primary units on TAP EGYPT. Reach thousands of active buyers and tenants daily with instant visibility across Egypt.
                 </p>
                 <div class="broker-fw-cta-row">
-                  <button class="btn-broker-fw-primary" onclick="app.openListPropertyModal()">
+                  <button class="btn-broker-fw-primary">
                     List Your Property Now →
                   </button>
                 </div>
