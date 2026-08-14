@@ -220,6 +220,25 @@ class TapEgyptApp {
       btn.addEventListener('click', () => this.toggleFilterDrawer(true));
     });
 
+    // Bedroom & Bathroom Circle Pill Selectors
+    document.querySelectorAll('#bedroom-circles-group .circle-pill').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.querySelectorAll('#bedroom-circles-group .circle-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        this.filters.bedrooms = btn.dataset.value || btn.textContent.trim();
+      });
+    });
+
+    document.querySelectorAll('#bathroom-circles-group .circle-pill').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.querySelectorAll('#bathroom-circles-group .circle-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        this.filters.bathrooms = btn.dataset.value || btn.textContent.trim();
+      });
+    });
+
     const backdrop = document.getElementById('filter-drawer-backdrop');
     if (backdrop) {
       backdrop.addEventListener('click', (e) => {
@@ -291,85 +310,12 @@ class TapEgyptApp {
       if (btn.dataset.mode === mode) btn.classList.add('active');
       else btn.classList.remove('active');
     });
-    this.showToast(`Mode: ${mode === 'resale' ? 'For Sale' : mode === 'rent' ? 'For Rent' : 'All Properties'}`);
+    
     if (window.location.hash === '#/properties') this.renderPropertiesView();
   }
 
   openListPropertyModal() {
-    let modal = document.getElementById('broker-list-modal');
-    if (!modal) {
-      modal = document.createElement('div');
-      modal.id = 'broker-list-modal';
-      modal.className = 'app-modal-backdrop';
-      modal.innerHTML = `
-        <div class="app-modal-dialog">
-          <button class="app-modal-close" onclick="document.getElementById('broker-list-modal').classList.remove('open')">✕</button>
-          
-          <div class="app-modal-header">
-            <span class="modal-pill-tag">BROKER PARTNER PROGRAM</span>
-            <h3 class="modal-title">List Your Property on TAP EGYPT</h3>
-            <p class="modal-sub">Submit your unit details below and reach thousands of verified buyers in Egypt.</p>
-          </div>
-
-          <form onsubmit="app.submitBrokerListing(event)" class="modal-form">
-            <div class="form-row-2col">
-              <div class="form-group">
-                <label>Full Name / Agency</label>
-                <input type="text" required placeholder="e.g. Ahmed Hassan" class="app-input">
-              </div>
-              <div class="form-group">
-                <label>Mobile / WhatsApp</label>
-                <input type="tel" required placeholder="+20 100 000 0000" class="app-input">
-              </div>
-            </div>
-
-            <div class="form-row-2col">
-              <div class="form-group">
-                <label>Listing Type</label>
-                <select class="app-select" required>
-                  <option value="Resale">Resale</option>
-                  <option value="Rent">Rent</option>
-                  <option value="Primary / Developer">Primary / New Launch</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Property Type</label>
-                <select class="app-select" required>
-                  <option value="Apartment">Apartment</option>
-                  <option value="Villa">Villa / Standalone</option>
-                  <option value="Townhouse">Townhouse</option>
-                  <option value="Twin House">Twin House</option>
-                  <option value="Chalet">Chalet</option>
-                  <option value="Studio">Studio</option>
-                  <option value="Penthouse">Penthouse</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label>Compound / Location</label>
-              <input type="text" required placeholder="e.g. Mountain View iCity, New Cairo" class="app-input">
-            </div>
-
-            <div class="form-row-2col">
-              <div class="form-group">
-                <label>Total Price (EGP)</label>
-                <input type="number" required placeholder="e.g. 8500000" class="app-input">
-              </div>
-              <div class="form-group">
-                <label>Downpayment (EGP)</label>
-                <input type="number" placeholder="e.g. 1500000" class="app-input">
-              </div>
-            </div>
-
-            <button type="submit" class="btn-modal-submit">Publish Property Listing →</button>
-          </form>
-        </div>
-      `;
-      document.body.appendChild(modal);
-    }
-
-    setTimeout(() => modal.classList.add('open'), 10);
+    this.openListingModal();
   }
 
   submitBrokerListing(e) {
@@ -488,6 +434,21 @@ class TapEgyptApp {
     this.filters.developer = document.getElementById('filter-developer-select')?.value || '';
     this.filters.project = document.getElementById('filter-project-select')?.value || '';
     this.filters.propertyType = document.getElementById('filter-type-select')?.value || '';
+    this.filters.floor = document.getElementById('filter-floor-select')?.value || '';
+    this.filters.finishing = document.getElementById('filter-finishing-select')?.value || '';
+    this.filters.deliveryDate = document.getElementById('filter-delivery-select')?.value || '';
+
+    const activeBedPill = document.querySelector('#bedroom-circles-group .circle-pill.active');
+    this.filters.bedrooms = activeBedPill ? (activeBedPill.dataset.value || activeBedPill.textContent.trim()) : 'Any';
+
+    const activeBathPill = document.querySelector('#bathroom-circles-group .circle-pill.active');
+    this.filters.bathrooms = activeBathPill ? (activeBathPill.dataset.value || activeBathPill.textContent.trim()) : 'Any';
+
+    const selectedLicenses = new Set();
+    document.querySelectorAll('.toggle-pill-switch:checked').forEach(cb => {
+      selectedLicenses.add(cb.value);
+    });
+    this.filters.licenses = selectedLicenses;
 
     this.showToast('Search filters applied');
     this.renderPropertiesView();
@@ -508,9 +469,23 @@ class TapEgyptApp {
       if (el) el.value = '';
     });
 
-    ['filter-location-select', 'filter-developer-select', 'filter-project-select', 'filter-type-select', 'hero-city-select', 'hero-type-select'].forEach(id => {
+    ['filter-location-select', 'filter-developer-select', 'filter-project-select', 'filter-type-select', 'filter-floor-select', 'filter-finishing-select', 'filter-delivery-select', 'hero-city-select', 'hero-type-select'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.value = '';
+    });
+
+    document.querySelectorAll('#bedroom-circles-group .circle-pill').forEach(b => {
+      if (b.dataset.value === 'Any') b.classList.add('active');
+      else b.classList.remove('active');
+    });
+
+    document.querySelectorAll('#bathroom-circles-group .circle-pill').forEach(b => {
+      if (b.dataset.value === 'Any') b.classList.add('active');
+      else b.classList.remove('active');
+    });
+
+    document.querySelectorAll('.toggle-pill-switch').forEach(cb => {
+      cb.checked = false;
     });
 
     this.showToast('Search filters reset');
@@ -519,20 +494,121 @@ class TapEgyptApp {
 
   getFilteredProperties() {
     return this.properties.filter(p => {
+      // 1. Rent vs Resale vs All tab filter
       if (this.currentMode === 'rent' && !p.isRent) return false;
       if (this.currentMode === 'resale' && p.isRent) return false;
 
+      // 2. Keyword Search Query
       if (this.searchQuery) {
-        const fullText = `${p.title} ${p.developer} ${p.project} ${p.location} ${p.propertyType}`.toLowerCase();
-        if (!fullText.includes(this.searchQuery)) return false;
+        const query = this.searchQuery.toLowerCase().trim();
+        const fullText = `${p.title} ${p.developer} ${p.project || ''} ${p.location} ${p.propertyType} ${p.finishing || ''}`.toLowerCase();
+        if (!fullText.includes(query)) return false;
       }
 
-      if (this.filters.location && p.location !== this.filters.location) return false;
-      if (this.filters.developer && p.developer !== this.filters.developer) return false;
-      if (this.filters.project && p.title !== this.filters.project) return false;
-      if (this.filters.propertyType && p.propertyType !== this.filters.propertyType) return false;
+      // 3. Location Filter
+      if (this.filters.location && this.filters.location !== 'All Cities' && this.filters.location !== '') {
+        const targetLoc = this.filters.location.toLowerCase();
+        const propLoc = (p.location || '').toLowerCase();
+        if (!propLoc.includes(targetLoc) && !targetLoc.includes(propLoc)) return false;
+      }
 
-      if (this.filters.priceTo && p.totalPrice > parseFloat(this.filters.priceTo)) return false;
+      // 4. Developer Filter
+      if (this.filters.developer && this.filters.developer !== '') {
+        const targetDev = this.filters.developer.toLowerCase();
+        const propDev = (p.developer || '').toLowerCase();
+        if (!propDev.includes(targetDev)) return false;
+      }
+
+      // 5. Project Filter (Matches p.project OR p.title)
+      if (this.filters.project && this.filters.project !== '') {
+        const targetProj = this.filters.project.toLowerCase();
+        const propProj = `${p.project || ''} ${p.title || ''}`.toLowerCase();
+        if (!propProj.includes(targetProj)) return false;
+      }
+
+      // 6. Property Type Filter
+      if (this.filters.propertyType && this.filters.propertyType !== '') {
+        const targetType = this.filters.propertyType.toLowerCase();
+        const propType = (p.propertyType || '').toLowerCase();
+        if (!propType.includes(targetType)) return false;
+      }
+
+      // 7. Bedrooms Filter
+      if (this.filters.bedrooms && this.filters.bedrooms !== 'Any') {
+        const valStr = this.filters.bedrooms.replace('+', '');
+        const reqBeds = parseInt(valStr, 10);
+        if (!isNaN(reqBeds)) {
+          if (this.filters.bedrooms.includes('+')) {
+            if (p.bedrooms < reqBeds) return false;
+          } else {
+            if (p.bedrooms !== reqBeds) return false;
+          }
+        }
+      }
+
+      // 8. Bathrooms Filter
+      if (this.filters.bathrooms && this.filters.bathrooms !== 'Any') {
+        const valStr = this.filters.bathrooms.replace('+', '');
+        const reqBaths = parseInt(valStr, 10);
+        if (!isNaN(reqBaths)) {
+          if (this.filters.bathrooms.includes('+')) {
+            if (p.bathrooms < reqBaths) return false;
+          } else {
+            if (p.bathrooms !== reqBaths) return false;
+          }
+        }
+      }
+
+      // 9. Floor Filter
+      if (this.filters.floor && this.filters.floor !== '') {
+        const targetFloor = this.filters.floor.toLowerCase();
+        const propFloor = (p.floor || p.propertyType || '').toLowerCase();
+        if (!propFloor.includes(targetFloor)) return false;
+      }
+
+      // 10. Finishing Status Filter
+      if (this.filters.finishing && this.filters.finishing !== '') {
+        const targetFin = this.filters.finishing.toLowerCase();
+        const propFin = (p.finishing || '').toLowerCase();
+        if (!propFin.includes(targetFin)) return false;
+      }
+
+      // 11. Delivery Date Filter
+      if (this.filters.deliveryDate && this.filters.deliveryDate !== '') {
+        const targetDel = this.filters.deliveryDate.toLowerCase();
+        const propDel = (p.deliveryDate || '').toLowerCase();
+        if (!propDel.includes(targetDel)) return false;
+      }
+
+      // 12. License Filter (Basic, Featured, Premium)
+      if (this.filters.licenses && this.filters.licenses.size > 0) {
+        const propLicense = p.license || (p.isPremium ? 'Premium' : 'Featured');
+        if (!this.filters.licenses.has(propLicense)) return false;
+      }
+
+      // 13. Price Range Filter (Min & Max)
+      if (this.filters.priceFrom && parseFloat(this.filters.priceFrom) > 0) {
+        if (p.totalPrice < parseFloat(this.filters.priceFrom)) return false;
+      }
+      if (this.filters.priceTo && parseFloat(this.filters.priceTo) > 0) {
+        if (p.totalPrice > parseFloat(this.filters.priceTo)) return false;
+      }
+
+      // 14. Downpayment Range Filter (Min & Max)
+      if (this.filters.downpaymentFrom && parseFloat(this.filters.downpaymentFrom) > 0) {
+        if ((p.downpayment || 0) < parseFloat(this.filters.downpaymentFrom)) return false;
+      }
+      if (this.filters.downpaymentTo && parseFloat(this.filters.downpaymentTo) > 0) {
+        if ((p.downpayment || 0) > parseFloat(this.filters.downpaymentTo)) return false;
+      }
+
+      // 15. Area Range Filter (Min & Max m²)
+      if (this.filters.areaFrom && parseFloat(this.filters.areaFrom) > 0) {
+        if ((p.area || 0) < parseFloat(this.filters.areaFrom)) return false;
+      }
+      if (this.filters.areaTo && parseFloat(this.filters.areaTo) > 0) {
+        if ((p.area || 0) > parseFloat(this.filters.areaTo)) return false;
+      }
 
       return true;
     }).sort((a, b) => {
@@ -581,6 +657,32 @@ class TapEgyptApp {
           <div class="app-card-title-main">${property.developer} - ${property.project || property.title}</div>
           <div class="app-card-subtitle-type">${property.propertyType}</div>
 
+          <!-- Extra details shown in Row/List View Mode (Professional Corporate SVGs) -->
+          <div class="app-card-row-extra-details">
+            <div class="row-extra-chip">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3H3v18h18V3z"/><path d="M21 9H9v12"/></svg>
+              <span>${property.area} m² Area</span>
+            </div>
+            ${property.gardenArea ? `
+              <div class="row-extra-chip">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+                <span>${property.gardenArea} m² Garden</span>
+              </div>
+            ` : ''}
+            <div class="row-extra-chip">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <span>${property.finishing}</span>
+            </div>
+            <div class="row-extra-chip">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="4.5"/><path d="M21 2l-9.6 9.6"/><path d="M15.5 7.5l3 3"/></svg>
+              <span>${property.deliveryDate}</span>
+            </div>
+            <div class="row-extra-chip">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span>${property.location}</span>
+            </div>
+          </div>
+
           <div class="app-card-details-grid">
             <div class="app-card-col-left">
               <div class="app-card-spec-line">
@@ -595,11 +697,11 @@ class TapEgyptApp {
 
             <div class="app-card-col-right">
               <div class="app-card-price-line">
-                <span class="price-lbl">Downpayment : </span>
+                <span class="price-lbl">Downpayment: </span>
                 <span class="price-val">${dpText}</span>
               </div>
               <div class="app-card-price-line">
-                <span class="price-lbl">Total Price : </span>
+                <span class="price-lbl">Total Price: </span>
                 <span class="price-val">${totalText}</span>
               </div>
             </div>
@@ -722,6 +824,10 @@ class TapEgyptApp {
           this.startOfferAutoPlay();
         }
       }, { passive: true });
+
+      window.addEventListener('resize', () => {
+        this.updateOfferSliderPosition(false);
+      });
     }
 
     this.updateOfferSliderPosition(true);
@@ -778,8 +884,8 @@ class TapEgyptApp {
     }
 
     const isMobile = window.innerWidth <= 768;
-    const slidePercentage = isMobile ? 85 : 78;
-    const gapPercentage = isMobile ? 3 : 2.5;
+    const slidePercentage = isMobile ? 80 : 78;
+    const gapPercentage = 2.5;
     const centerOffset = (100 - slidePercentage) / 2;
     const offset = centerOffset - this.activeSlotIndex * (slidePercentage + gapPercentage);
 
@@ -876,8 +982,6 @@ class TapEgyptApp {
     }
   }
 
-
-
   filterByLocation(locationName) {
     this.filters.location = locationName;
     window.location.hash = '#/properties';
@@ -888,35 +992,104 @@ class TapEgyptApp {
     window.location.hash = '#/properties';
   }
 
+  setSortOption(option) {
+    if (this.sortOption === option) {
+      this.sortOption = 'default';
+    } else {
+      this.sortOption = option;
+    }
+    this.renderPropertiesView();
+  }
+
+  setViewMode(mode) {
+    this.viewMode = mode;
+    const gridBtn = document.getElementById('btn-view-grid');
+    const listBtn = document.getElementById('btn-view-list');
+    const target = document.getElementById('properties-full-grid');
+
+    if (gridBtn && listBtn) {
+      if (mode === 'list') {
+        listBtn.classList.add('active');
+        gridBtn.classList.remove('active');
+      } else {
+        gridBtn.classList.add('active');
+        listBtn.classList.remove('active');
+      }
+    }
+
+    if (target) {
+      if (mode === 'list') {
+        target.classList.add('list-view-mode');
+      } else {
+        target.classList.remove('list-view-mode');
+      }
+    }
+  }
+
   renderPropertiesView() {
     const list = this.getFilteredProperties();
     const grid = document.getElementById('properties-full-grid');
     const countLabel = document.getElementById('properties-results-count');
+    const tagsContainer = document.getElementById('active-filter-tags');
+
+    const hasActiveFilters = Boolean(
+      this.filters.location ||
+      this.filters.developer ||
+      this.filters.project ||
+      this.filters.propertyType ||
+      this.filters.priceTo ||
+      this.filters.priceFrom ||
+      this.filters.downpaymentTo ||
+      this.searchQuery
+    );
 
     if (countLabel) {
-      countLabel.textContent = `${list.length} Results`;
+      if (hasActiveFilters) {
+        countLabel.textContent = `${list.length} Results`;
+        countLabel.style.display = 'block';
+      } else {
+        countLabel.style.display = 'none';
+      }
     }
 
-    // Active Filters Tag Bar
-    const tagsContainer = document.getElementById('active-filter-tags');
+    // Ensure sort pill active state matches current sortOption
+    document.querySelectorAll('.sort-pill-btn').forEach(btn => {
+      if (btn.dataset.sort === this.sortOption && this.sortOption !== 'default') btn.classList.add('active');
+      else btn.classList.remove('active');
+    });
+
+    // Active Filters Tag Bar — Shown ONLY when filters are active
     if (tagsContainer) {
-      let tagsHTML = '';
-      if (this.filters.location) {
-        tagsHTML += `<div class="active-filter-chip">Location: ${this.filters.location} <span onclick="app.filters.location=''; app.renderPropertiesView();">×</span></div>`;
-      }
-      if (this.searchQuery) {
-        tagsHTML += `<div class="active-filter-chip">Keyword: "${this.searchQuery}" <span onclick="app.searchQuery=''; app.renderPropertiesView();">×</span></div>`;
-      }
-      
-      if (tagsHTML) {
+      if (hasActiveFilters) {
+        tagsContainer.style.display = 'flex';
+        let tagsHTML = '';
+        if (this.filters.location) {
+          tagsHTML += `<div class="active-filter-chip">Location: ${this.filters.location} <span onclick="app.filters.location=''; app.renderPropertiesView();">×</span></div>`;
+        }
+        if (this.filters.developer) {
+          tagsHTML += `<div class="active-filter-chip">Developer: ${this.filters.developer} <span onclick="app.filters.developer=''; app.renderPropertiesView();">×</span></div>`;
+        }
+        if (this.filters.propertyType) {
+          tagsHTML += `<div class="active-filter-chip">Type: ${this.filters.propertyType} <span onclick="app.filters.propertyType=''; app.renderPropertiesView();">×</span></div>`;
+        }
+        if (this.searchQuery) {
+          tagsHTML += `<div class="active-filter-chip">Keyword: "${this.searchQuery}" <span onclick="app.searchQuery=''; app.renderPropertiesView();">×</span></div>`;
+        }
         tagsHTML += `<button class="btn-clear-all-text" onclick="app.resetFilters()">CLEAR ALL</button>`;
+        tagsContainer.innerHTML = tagsHTML;
       } else {
-        tagsHTML = `<div class="active-filter-chip">Location: All Cities</div>`;
+        tagsContainer.style.display = 'none';
+        tagsContainer.innerHTML = '';
       }
-      tagsContainer.innerHTML = tagsHTML;
     }
 
     if (grid) {
+      if (this.viewMode === 'list') {
+        grid.classList.add('list-view-mode');
+      } else {
+        grid.classList.remove('list-view-mode');
+      }
+
       if (list.length === 0) {
         grid.innerHTML = `
           <div style="grid-column: 1/-1; text-align: center; padding: 48px; background: #FFF; border-radius: 18px;">
@@ -931,7 +1104,6 @@ class TapEgyptApp {
     }
   }
 
-  // PROPERTY DETAIL VIEW (`/properties/[slug]`)
   renderPropertyDetailView(property) {
     const target = document.getElementById('detail-view-target');
     if (!target) return;
@@ -941,8 +1113,23 @@ class TapEgyptApp {
 
     const galleryHTML = this.buildDetailGalleryHTML(property, 0);
 
+    // Determine badge styling matching property card standards
+    const licenseRaw = (property.license || 'Featured').toUpperCase();
+    const badgeClass = licenseRaw.includes('PREMIUM') ? 'app-badge-premium' : 'app-badge-featured';
+    const badgeText = licenseRaw.includes('PREMIUM') ? 'PREMIUM' : 'FEATURED';
+
+    // Find 3 related properties in the same city/location
+    const sameCityProps = (this.properties || []).filter(p => 
+      p.id !== property.id && 
+      p.location && 
+      (p.location === property.location || p.location.includes(property.location) || property.location.includes(p.location))
+    );
+    const otherProps = (this.properties || []).filter(p => p.id !== property.id && !sameCityProps.includes(p));
+    const relatedList = [...sameCityProps, ...otherProps].slice(0, 3);
+    const relatedCardsHTML = relatedList.map(p => this.renderPropertyCardHTML(p)).join('');
+
     target.innerHTML = `
-      <div style="max-width: 1200px; margin: 0 auto;">
+      <div class="detail-container-wrap" style="max-width: 1200px; margin: 0 auto;">
         
         <!-- Desktop Dynamic Gallery (1-16 Photos, 4x4 Slider) -->
         ${galleryHTML}
@@ -957,18 +1144,38 @@ class TapEgyptApp {
 
             <div style="display: flex; align-items: center; gap: 12px;">
               <div style="color: #F59E0B; font-size: 16px;">★★★★★</div>
-              <span class="ref-pill-tag resale" style="position:static; font-size:12px; padding:6px 14px;">${property.license || 'Basic'}</span>
+              <span class="app-card-badge ${badgeClass}" style="position: static; font-size: 11px; padding: 5px 14px; border-radius: 6px; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase;">${badgeText}</span>
             </div>
           </div>
 
-          <!-- Feature Chips -->
+          <!-- Feature Chips with Card Row Mode Vector SVG Icons -->
           <div class="detail-feature-pills-flex">
-            <div class="detail-app-chip">🛏 ${property.bedrooms} Bedrooms</div>
-            <div class="detail-app-chip">🚿 ${property.bathrooms} Bathrooms</div>
-            <div class="detail-app-chip">📐 ${property.area} m² Area</div>
-            ${property.gardenArea ? `<div class="detail-app-chip">🏡 ${property.gardenArea} m² Garden</div>` : ''}
-            <div class="detail-app-chip">✨ ${property.finishing}</div>
-            <div class="detail-app-chip">🔑 ${property.deliveryDate}</div>
+            <div class="detail-app-chip">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="#0E7C79"><path d="M7 13c1.66 0 3-1.34 3-3S8.66 7 7 7s-3 1.34-3 3 1.34 3 3 3zm12-6h-8v7H3V5H1v15h2v-3h18v3h2v-9c0-1.66-1.34-3-3-3z"/></svg>
+              <span>${property.bedrooms} Bedrooms</span>
+            </div>
+            <div class="detail-app-chip">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="#0E7C79"><path d="M20 13V4.83C20 3.27 18.73 2 17.17 2c-.75 0-1.47.3-2 .83l-1.17 1.17c-.53.53-.83 1.25-.83 2V13h-2V6c0-1.66-1.34-3-3-3S5 4.34 5 6v7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-1z"/></svg>
+              <span>${property.bathrooms} Bathrooms</span>
+            </div>
+            <div class="detail-app-chip">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3H3v18h18V3z"/><path d="M21 9H9v12"/></svg>
+              <span>${property.area} m² Area</span>
+            </div>
+            ${property.gardenArea ? `
+              <div class="detail-app-chip">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+                <span>${property.gardenArea} m² Garden</span>
+              </div>
+            ` : ''}
+            <div class="detail-app-chip">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <span>${property.finishing}</span>
+            </div>
+            <div class="detail-app-chip">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="4.5"/><path d="M21 2l-9.6 9.6"/><path d="M15.5 7.5l3 3"/></svg>
+              <span>${property.deliveryDate}</span>
+            </div>
           </div>
         </div>
 
@@ -1061,13 +1268,24 @@ class TapEgyptApp {
                   Call Now
                 </button>
                 <button class="btn-sticky-whatsapp" onclick="app.triggerWhatsApp('${property.agent.whatsapp}', '${property.title}')">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="#FFF"><path d="M16.75 13.96c-.25-.13-1.47-.72-1.7-.81-.23-.08-.39-.13-.56.13-.17.25-.66.81-.81 1-.15.17-.3.19-.55.07-.25-.13-1.07-.39-2.04-1.25-.75-.67-1.26-1.5-1.41-1.75-.15-.25-.02-.38.11-.51.11-.11.25-.29.37-.44.12-.15.17-.25.25-.42.08-.17.04-.32-.02-.45s-.56-1.35-.77-1.85c-.2-.49-.4-.42-.56-.43h-.48c-.17 0-.44.06-.67.31s-.88.86-.88 2.1 0 2.43.91 3.65c.91 1.22 3.1 3.53 7.51 5.43 1.05.45 1.87.72 2.5.92.83.26 1.58.23 2.18.14.67-.1 2.05-.84 2.34-1.65.29-.81.29-1.5.2-1.65-.09-.15-.24-.23-.49-.36z"/></svg>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.99c-.002 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413"/></svg>
                   WhatsApp
                 </button>
               </div>
             </div>
           </div>
 
+        </div>
+
+        <!-- Related Properties Section (3 Cards in Same City) -->
+        <div class="related-properties-section" style="margin-top: 64px; padding-top: 40px; border-top: 1px solid #E2E8F0;padding:20px">
+          <div style="margin-bottom: 24px;">
+            <h2 style="font-size: 24px; font-weight: 800; color: #0F172A; margin-bottom: 6px;">Related Properties in ${property.location}</h2>
+            <p style="font-size: 14px; color: #64748B;">Similar verified properties available in ${property.location}</p>
+          </div>
+          <div class="property-app-grid">
+            ${relatedCardsHTML}
+          </div>
         </div>
 
       </div>
@@ -1362,8 +1580,7 @@ class TapEgyptApp {
     const totalSlides = Math.ceil(gallery.length / 4);
     
     let newSlide = (this.detailGallerySlide || 0) + dir;
-    if (newSlide < 0) newSlide = totalSlides - 1;
-    if (newSlide >= totalSlides) newSlide = 0;
+    if (newSlide < 0 || newSlide >= totalSlides) return;
     
     this.detailGallerySlide = newSlide;
     const galleryWrap = document.querySelector('.detail-desktop-gallery-wrapper');

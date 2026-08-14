@@ -33,10 +33,10 @@
 
       <!-- Navigation Links Structure -->
       <ul class="nav-links">
-        <li><a href="#/properties" class="nav-link active">Buy / Resale</a></li>
-        <li><a href="#/properties" class="nav-link" onclick="app.setMode('rent')">Rent</a></li>
+        <li><a href="#/properties" class="nav-link active">Explore</a></li>
+        <li><a href="#/" class="nav-link">Offers</a></li>
         <li><a href="#/" class="nav-link" onclick="document.getElementById('explore-devs').scrollIntoView({behavior:'smooth'})">Developers</a></li>
-        <li><a href="#/" class="nav-link" onclick="app.openBlogModal()">Blog</a></li>
+        <li><a href="#/" class="nav-link">Blog</a></li>
       </ul>
 
       <!-- Action Cluster: QR App Hover, Saved Heart, Notification Bell, Auth & Add Listing -->
@@ -97,14 +97,14 @@
 
         <!-- 4. Dynamic Auth Button / Signed-In User State -->
         <div id="nav-auth-container">
-          <button class="btn-nav-auth" onclick="app.openAuthModal()">
+          <button class="btn-nav-auth">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
             Sign In
           </button>
         </div>
 
         <!-- 5. List Property Primary Action CTA -->
-        <button class="btn-nav-teal" onclick="app.openListingModal()">
+        <button class="btn-nav-teal" >
           + List Property
         </button>
 
@@ -130,13 +130,13 @@
 
           <!-- Dropdown Menu -->
           <div id="mobile-nav-dropdown" class="mobile-nav-dropdown">
-            <div class="mobile-nav-dropdown-item" onclick="app.openListingModal(); document.getElementById('mobile-nav-dropdown').classList.remove('open');">
+            <div class="mobile-nav-dropdown-item" onclick=" document.getElementById('mobile-nav-dropdown').classList.remove('open');">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               List Property
             </div>
             <div class="mobile-nav-dropdown-item" onclick="window.location.hash='#/properties'; document.getElementById('mobile-nav-dropdown').classList.remove('open');">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-              Buy / Resale
+              Explore
             </div>
             <div class="mobile-nav-dropdown-item" onclick="app.setMode('rent'); window.location.hash='#/properties'; document.getElementById('mobile-nav-dropdown').classList.remove('open');">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -748,43 +748,46 @@
     <div id="properties-view" style="display: none;" class="catalog-page-container">
       <div class="container">
         
-        <!-- Top Control Bar -->
+        <!-- Top Control Bar (Pills matching photo_2026-08-11_16-12-46.jpg) -->
         <div class="catalog-top-control-bar">
-          <div class="control-bar-left">
-            <button class="btn-catalog-filter-pill btn-filter-trigger">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg>
-              Filters
+          <div class="app-sort-pills-row">
+            <button class="app-sort-pill btn-filter-trigger" title="Filter Listings">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+              Filter
             </button>
-            <div id="properties-results-count" class="results-count-text">6 Results</div>
+            
+            <button class="app-sort-pill sort-pill-btn" data-sort="low-price" onclick="app.setSortOption('low-price')">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 6h16M4 12h10M4 18h6"/></svg>
+              Low Price
+            </button>
+            
+            <button class="app-sort-pill sort-pill-btn" data-sort="high-price" onclick="app.setSortOption('high-price')">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 6h16M4 12h10M4 18h6"/></svg>
+              High Price
+            </button>
+
+            <button class="app-sort-pill sort-pill-btn" data-sort="favorites" onclick="app.setSortOption('favorites')">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+              Top Rated
+            </button>
           </div>
 
-          <div class="control-bar-right">
-            <div class="sort-select-box">
-              <span>Sort by:</span>
-              <select id="catalog-sort-select" class="sort-dropdown-pill">
-                <option value="default">Featured</option>
-                <option value="low-price">Price: Low to High</option>
-                <option value="high-price">Price: High to Low</option>
-                <option value="favorites">Top Rated</option>
-              </select>
-            </div>
-
+          <div class="control-bar-right-group">
+            <div id="properties-results-count" class="results-count-text" style="display: none;"></div>
+            
             <div class="view-mode-toggle">
-              <button class="btn-view-icon active" id="btn-view-grid" title="Grid View">
+              <button class="btn-view-icon active" id="btn-view-grid" onclick="app.setViewMode('grid')" title="Grid View">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h4v4H4V4zm6 0h4v4h-4V4zm6 0h4v4h-4V4zM4 10h4v4H4v-4zm6 0h4v4h-4v-4zm6 0h4v4h-4v-4zM4 16h4v4H4v-4zm6 0h4v4h-4v-4zm6 0h4v4h-4v-4z"/></svg>
               </button>
-              <button class="btn-view-icon" id="btn-view-list" title="List View">
+              <button class="btn-view-icon" id="btn-view-list" onclick="app.setViewMode('list')" title="List View (1 card per row vertically)">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M4 10.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm0-6c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm0 12c-.83 0-1.5.68-1.5 1.5s.68 1.5 1.5 1.5 1.5-.68 1.5-1.5-.67-1.5-1.5-1.5zM7 19h14v-2H7v2zm0-6h14v-2H7v2zm0-8v2h14V5H7z"/></svg>
               </button>
             </div>
           </div>
         </div>
 
-        <!-- Active Filter Tags Bar -->
-        <div id="active-filter-tags" class="active-filters-tags-bar">
-          <div class="active-filter-chip">Location: All Cities <span onclick="app.resetFilters()">×</span></div>
-          <button class="btn-clear-all-text" onclick="app.resetFilters()">CLEAR ALL</button>
-        </div>
+        <!-- Active Filter Tags Bar (Shown ONLY when filters are active) -->
+        <div id="active-filter-tags" class="active-filters-tags-bar" style="display: none;"></div>
 
         <!-- 3-Column Catalog Grid -->
         <div id="properties-full-grid" class="app-cards-grid"></div>
@@ -1099,7 +1102,7 @@
       <!-- Bottom Row: Copyright & Legal -->
       <div class="footer-bottom-row">
         <div class="footer-copyright">
-          © 2026 TAP EGYPT Marketplace Inc. All rights reserved.
+          © 2026 TAP EGYPT Marketplace Inc. All rights reserved. • Developed by <a href="https://abdelrahman-axiom-portfolio.vercel.app/" target="_blank" rel="noopener noreferrer" style="color: var(--teal-primary); font-weight: 700; text-decoration: underline;">ABDELRAHMAN TAREK</a>
         </div>
 
         <div class="footer-legal-links">
