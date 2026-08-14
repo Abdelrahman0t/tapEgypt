@@ -98,6 +98,10 @@ button, input, select, textarea {
   align-items: center;
   justify-content: space-between;
   height: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
+  width: 100%;
 }
 
 .brand-logo {
@@ -554,7 +558,112 @@ button, input, select, textarea {
   border: none;
   color: var(--text-primary);
   cursor: pointer;
+  padding: 6px;
+  border-radius: 10px;
+  transition: background 0.2s ease;
 }
+
+.mobile-menu-btn:hover {
+  background: rgba(14, 124, 121, 0.08);
+}
+
+.mobile-header-actions {
+  display: none;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Bell button */
+.mobile-bell-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: transparent;
+  border: none;
+  padding: 6px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.mobile-bell-btn:hover {
+  background: rgba(14, 124, 121, 0.08);
+}
+
+.bell-badge-dot {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 7px;
+  height: 7px;
+  background: #EF4444;
+  border-radius: 50%;
+  border: 1.5px solid #FFFFFF;
+}
+
+/* Mobile hamburger + dropdown wrapper */
+.mobile-menu-wrapper {
+  position: relative;
+}
+
+/* Dropdown menu */
+.mobile-nav-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  box-shadow: 0 16px 48px rgba(15, 23, 42, 0.18);
+  min-width: 220px;
+  z-index: 2000;
+  overflow: hidden;
+  animation: dropdownFadeIn 0.18s ease;
+}
+
+.mobile-nav-dropdown.open {
+  display: block;
+}
+
+@keyframes dropdownFadeIn {
+  from { opacity: 0; transform: translateY(-8px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.mobile-nav-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1E293B;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+  border-bottom: 1px solid #F1F5F9;
+}
+
+.mobile-nav-dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.mobile-nav-dropdown-item:hover {
+  background: #F0FAF9;
+  color: var(--teal-primary);
+}
+
+.mobile-nav-dropdown-item:first-child {
+  color: var(--teal-primary);
+  font-weight: 700;
+}
+
+.mobile-nav-dropdown-item svg {
+  flex-shrink: 0;
+  stroke: currentColor;
+}
+
 
 /* ==========================================================================
    2. AUTH & LISTING MODAL OVERLAYS (STRICT MODAL LAYER FIX)
@@ -796,7 +905,7 @@ button, input, select, textarea {
   left: 50%;
   transform: translateX(-50%) translateY(50%);
   width: 100%;
-  max-width: 1160px;
+  max-width: 1240px;
   z-index: 30;
   padding: 0 24px;
 }
@@ -3175,6 +3284,7 @@ button, input, select, textarea {
 
 @media (max-width: 768px) {
   .nav-links, .nav-right-actions { display: none; }
+  .mobile-header-actions { display: flex; align-items: center; }
   .mobile-menu-btn { display: block; }
   .hero-title-main { font-size: 34px; }
   .hero-trust-strip { flex-direction: column; align-items: flex-start; gap: 12px; }
@@ -3235,33 +3345,59 @@ button, input, select, textarea {
   margin-top: 4px;
 }
 
+.explore-all-link {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--teal-primary);
+  text-decoration: none;
+  transition: color 0.2s ease, transform 0.2s ease;
+  white-space: nowrap;
+  
+}
+
+.explore-all-link:hover {
+  color: var(--teal-hover);
+  transform: translateX(3px);
+}
+
 .offer-slider-nav-btns {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  display: none; /* Hidden on mobile — desktop shows via media query below */
 }
 
 .offer-nav-btn {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: #FFFFFF;
-  border: 1px solid #E2E8F0;
-  color: #0F172A;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
-  transition: all 0.2s ease;
+  display: none;
 }
 
-.offer-nav-btn:hover {
-  background: var(--teal-primary);
-  color: #FFFFFF;
-  border-color: var(--teal-primary);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(14, 124, 121, 0.3);
+/* Show slider arrows on desktop (≥ 769px) */
+@media (min-width: 769px) {
+  .offer-slider-nav-btns {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .offer-nav-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    color: #0F172A;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+    transition: all 0.2s ease;
+  }
+
+  .offer-nav-btn:hover {
+    background: var(--teal-primary);
+    color: #FFFFFF;
+    border-color: var(--teal-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(14, 124, 121, 0.3);
+  }
 }
 
 /* PEEKING CAROUSEL SLIDER (photo_2026-08-11_16-13-00.jpg) */
@@ -3278,6 +3414,12 @@ button, input, select, textarea {
   gap: 2.5%;
   transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
   will-change: transform;
+}
+
+/* Used by JS during infinite-loop snap to defeat any !important transition */
+.peeking-offer-track.no-transition,
+.peeking-offer-card.no-transition {
+  transition: none !important;
 }
 
 .peeking-offer-card {
@@ -3913,7 +4055,7 @@ button, input, select, textarea {
   }
 
   /* Today's Offer Touch Swipe Carousel on Mobile (No Arrow Buttons Needed!) */
-  .todays-offer-section {
+  section.todays-offer-section {
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
@@ -3921,44 +4063,66 @@ button, input, select, textarea {
   .todays-offer-header {
     flex-direction: column !important;
     align-items: flex-start !important;
-    gap: 6px !important;
-    margin-bottom: 14px !important;
+    gap: 4px !important;
+    margin-bottom: 16px !important;
     padding-left: 16px !important;
     padding-right: 16px !important;
   }
 
-  .offer-slider-nav-btns {
-    display: none !important;
+  .featured-listings-section .todays-offer-header {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
   }
 
+  .explore-all-link {
+    align-self: flex-end !important;
+    margin-top: 32px !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+  }
+
+  /* Today's Offer Slider — Peeking 3D Carousel (Stepping 1 card per swipe!) */
   .peeking-carousel-wrapper {
-    overflow-x: auto !important;
-    scroll-snap-type: x mandatory !important;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    padding: 6px 0;
-  }
-
-  .peeking-carousel-wrapper::-webkit-scrollbar {
-    display: none;
+    position: relative !important;
+    width: 100% !important;
+    overflow: hidden !important;
+    padding: 8px 0 !important;
   }
 
   .peeking-offer-track {
     display: flex !important;
-    transform: none !important;
-    gap: 12px !important;
-    padding-left: 16px !important;
-    padding-right: 16px !important;
-    width: max-content !important;
+    width: 100% !important;
+    gap: 3% !important;
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1) !important;
+    will-change: transform;
+    padding: 0 !important;
   }
 
   .peeking-offer-card {
-    flex: 0 0 85vw !important;
-    max-width: 340px !important;
-    height: 230px !important;
-    scroll-snap-align: center !important;
+    flex: 0 0 85% !important;
+    width: 85% !important;
+    height: 240px !important;
+    border-radius: 20px !important;
+    position: relative !important;
+    overflow: hidden !important;
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.12) !important;
+    opacity: 0.7 !important;
+    transform: scale(0.92) !important;
+    transition: opacity 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease !important;
+  }
+
+  .peeking-offer-card.active {
     opacity: 1 !important;
-    transform: none !important;
+    transform: scale(1) !important;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.22) !important;
+  }
+
+  .peeking-offer-img {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
     border-radius: 20px !important;
   }
 
@@ -4108,6 +4272,71 @@ button, input, select, textarea {
   .nav-bell-wrapper {
     display: block !important;
   }
+
+  /* ---- Mobile Card: Full-image overlay style (photo_2026-08-11_16-12-47.jpg) ---- */
+  .app-card-white-body {
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 10 !important;
+    background: transparent !important;
+    padding: 14px 16px !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .app-card-title-main {
+    color: #FFFFFF !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.9) !important;
+    margin-bottom: 2px !important;
+  }
+
+  .app-card-subtitle-type {
+    color: rgba(255,255,255,0.85) !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    margin-bottom: 8px !important;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.9) !important;
+  }
+
+  .app-card-details-grid {
+    border-top: none !important;
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+    display: flex !important;
+    align-items: flex-end !important;
+    justify-content: space-between !important;
+  }
+
+  .app-card-spec-line {
+    color: #FFFFFF !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8) !important;
+  }
+
+  .app-card-spec-line svg {
+    fill: #FFFFFF !important;
+  }
+
+  .app-card-price-line {
+    color: #FFFFFF !important;
+    font-size: 13px !important;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.8) !important;
+  }
+
+  .app-card-price-line .price-lbl {
+    color: rgba(255,255,255,0.85) !important;
+    font-weight: 500 !important;
+  }
+
+  .app-card-price-line .price-val {
+    color: #FFFFFF !important;
+    font-weight: 800 !important;
+  }
 }
 
 /* ==========================================================================
@@ -4152,71 +4381,10 @@ button, input, select, textarea {
   }
 }
 
-  /* White Body overlay at bottom of card */
-  .app-card-white-body {
-    position: absolute !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    z-index: 10 !important;
-    background: transparent !important;
-    padding: 14px 16px 14px !important;
-    display: flex !important;
-    flex-direction: column !important;
-  }
-
-  .app-card-title-main {
-    color: #FFFFFF !important;
-    font-size: 16px !important;
-    font-weight: 700 !important;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9) !important;
-    margin-bottom: 2px !important;
-  }
-
-  .app-card-subtitle-type {
-    color: rgba(255, 255, 255, 0.85) !important;
-    font-size: 13px !important;
-    font-weight: 500 !important;
-    margin-bottom: 8px !important;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9) !important;
-  }
-
-  .app-card-details-grid {
-    border-top: none !important;
-    padding-top: 0 !important;
-    margin-top: 0 !important;
-    display: flex !important;
-    align-items: flex-end !important;
-    justify-content: space-between !important;
-  }
-
-  .app-card-spec-line {
-    color: #FFFFFF !important;
-    font-size: 13px !important;
-    font-weight: 600 !important;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.8) !important;
-  }
-
-  .app-card-spec-line svg {
-    fill: #FFFFFF !important;
-  }
-
-  .app-card-price-line {
-    color: #FFFFFF !important;
-    font-size: 13px !important;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.8) !important;
-  }
-
-  .app-card-price-line .price-lbl {
-    color: rgba(255, 255, 255, 0.85) !important;
-    font-weight: 500 !important;
-  }
-
-  .app-card-price-line .price-val {
-    color: #FFFFFF !important;
-    font-weight: 800 !important;
-  }
-
+/* ===========================================================================
+   MOBILE ONLY: App Showcase + Footer overrides (≤ 768px)
+   =========================================================================== */
+@media (max-width: 768px) {
   /* Fullsite Responsiveness for Hero, Showcase & Footer */
   .app-fullwidth-grid {
     grid-template-columns: 1fr !important;
@@ -4228,14 +4396,127 @@ button, input, select, textarea {
     align-items: center !important;
   }
 
-  .footer-main-grid {
-    grid-template-columns: 1fr 1fr !important;
-    gap: 24px !important;
+  /* Responsive Mobile Footer */
+  .site-footer {
+    padding: 48px 0 28px !important;
   }
 
   .footer-top-banner {
     flex-direction: column !important;
-    gap: 20px !important;
+    align-items: flex-start !important;
+    gap: 24px !important;
+    padding-bottom: 28px !important;
+    margin-bottom: 32px !important;
+  }
+
+  .footer-brand-col {
+    max-width: 100% !important;
+  }
+
+  .footer-brand-desc {
+    font-size: 13.5px !important;
+    line-height: 1.7 !important;
+  }
+
+  .footer-newsletter-col {
+    width: 100% !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+
+  .newsletter-title {
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    color: #F8FAFC !important;
+  }
+
+  .newsletter-input-wrap {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    background: #1E293B !important;
+    border: 1.5px solid #334155 !important;
+    border-radius: 16px !important;
+    padding: 6px 8px !important;
+    width: 100% !important;
+    min-height: 54px !important;
+    box-shadow: 0 4px 18px rgba(15, 23, 42, 0.25) !important;
+  }
+
+  .footer-newsletter-input {
+    flex: 1 !important;
+    width: auto !important;
+    height: 42px !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 12px !important;
+    font-size: 14px !important;
+    color: #FFFFFF !important;
+    outline: none !important;
+  }
+
+  .footer-newsletter-input::placeholder {
+    color: #94A3B8 !important;
+  }
+
+  .footer-newsletter-btn {
+    height: 42px !important;
+    padding: 0 20px !important;
+    border-radius: 12px !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+    background: var(--teal-primary) !important;
+    color: #FFFFFF !important;
+    border: none !important;
+  }
+
+  /* Footer 5-col grid → 2 col on mobile, 1 col on tiny */
+  .footer-main-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 32px 20px !important;
+    padding-bottom: 32px !important;
+  }
+
+  /* App store buttons side by side */
+  .footer-store-btns {
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  .footer-store-btn {
+    max-width: 140px !important;
+    flex: 1 !important;
+  }
+
+  /* Get In Touch — full row */
+  .footer-main-grid .footer-col:last-child {
+    grid-column: span 2 !important;
+  }
+
+  /* Contact items horizontal */
+  .footer-contact-item {
+    display: inline-flex !important;
+    margin-bottom: 12px !important;
+    margin-right: 16px !important;
+    font-size: 13px !important;
+  }
+
+  .footer-bottom-row {
+    flex-direction: column !important;
+    gap: 10px !important;
+    text-align: center !important;
+    align-items: center !important;
+    padding-top: 20px !important;
+    font-size: 12px !important;
+  }
+
+  .footer-legal-links {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 6px 14px !important;
   }
 }
 

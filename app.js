@@ -82,6 +82,7 @@ class TapEgyptApp {
       }
     ];
 
+
     this.init();
   }
 
@@ -90,6 +91,15 @@ class TapEgyptApp {
     this.populateFilterDropdowns();
     this.handleRouting();
     window.addEventListener('hashchange', () => this.handleRouting());
+
+    // Close mobile nav dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      const dropdown = document.getElementById('mobile-nav-dropdown');
+      const wrapper = document.getElementById('mobile-menu-wrapper');
+      if (dropdown && wrapper && !wrapper.contains(e.target)) {
+        dropdown.classList.remove('open');
+      }
+    });
   }
 
   handleRouting() {
@@ -671,6 +681,47 @@ class TapEgyptApp {
       container.addEventListener('mouseleave', () => {
         if (this.isOfferSectionInView) this.startOfferAutoPlay();
       });
+
+      // 1. Wheel / Trackpad — only intercept HORIZONTAL scroll on touch devices
+      container.addEventListener('wheel', (e) => {
+        // Only intercept on touch/mobile devices
+        const isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+        if (!isTouchDevice) return;
+
+        // Only fire on clearly horizontal scroll — ignore vertical page scrolling
+        const isHorizontal = Math.abs(e.deltaX) > Math.abs(e.deltaY) * 1.5 && Math.abs(e.deltaX) > 15;
+        if (!isHorizontal) return;
+
+        e.preventDefault();
+        const dir = e.deltaX > 0 ? 1 : -1;
+        this.scrollOfferSlider(dir);
+      }, { passive: false });
+
+      // 2. Touch Swipe Gesture Engine — 1 swipe = EXACTLY 1 card step (resets timer!)
+      let touchStartX = 0;
+      let touchStartY = 0;
+
+      container.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        this.pauseOfferAutoPlay();
+      }, { passive: true });
+
+      container.addEventListener('touchend', (e) => {
+        const touchEndX = e.changedTouches[0].clientX;
+        const touchEndY = e.changedTouches[0].clientY;
+        const deltaX = touchEndX - touchStartX;
+        const deltaY = touchEndY - touchStartY;
+
+        // Stricter horizontal check: must be decisively horizontal (not diagonal down-scroll)
+        const isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY) * 1.5 && Math.abs(deltaX) > 40;
+        if (isHorizontalSwipe) {
+          const dir = deltaX < 0 ? 1 : -1;
+          this.scrollOfferSlider(dir);
+        } else if (this.isOfferSectionInView) {
+          this.startOfferAutoPlay();
+        }
+      }, { passive: true });
     }
 
     this.updateOfferSliderPosition(true);
@@ -749,9 +800,13 @@ class TapEgyptApp {
     });
 
     if (!animate) {
-      void track.offsetHeight; // Force layout recalculation to prevent visual scale pump on loop snap
+      // Add class to override CSS !important transition on mobile, then remove after snap
+      track.classList.add('no-transition');
+      cards.forEach(card => card.classList.add('no-transition'));
+      void track.offsetHeight; // Force reflow so snap is instant
       requestAnimationFrame(() => {
-        cards.forEach(card => card.style.transition = '');
+        track.classList.remove('no-transition');
+        cards.forEach(card => card.classList.remove('no-transition'));
       });
     }
 
