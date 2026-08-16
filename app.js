@@ -89,6 +89,8 @@ class TapEgyptApp {
   init() {
     this.bindEvents();
     this.populateFilterDropdowns();
+    this.setupSearchableSelects();
+    this.setupScrollObserver();
     this.handleRouting();
     window.addEventListener('hashchange', () => this.handleRouting());
 
@@ -98,6 +100,81 @@ class TapEgyptApp {
       const wrapper = document.getElementById('mobile-menu-wrapper');
       if (dropdown && wrapper && !wrapper.contains(e.target)) {
         dropdown.classList.remove('open');
+      }
+    });
+  }
+
+  setupScrollObserver() {
+    if (typeof IntersectionObserver === 'undefined') return;
+
+    this.scrollObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-revealed');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      root: null,
+      rootMargin: '0px 0px -40px 0px',
+      threshold: 0.06
+    });
+
+    this.observeScrollAnimations();
+  }
+
+  observeScrollAnimations() {
+    if (!this.scrollObserver) return;
+
+    const selectors = [
+      '.hz-section-header',
+      '.hz-section-title',
+      '.hz-section-subtitle',
+      '.why-choose-us-section',
+      '.why-choose-card',
+      '.todays-offer-section',
+      '.todays-offer-header',
+      '.broker-fullwidth-section',
+      '.broker-fw-left',
+      '.broker-fw-right',
+      '.broker-value-card',
+      '.featured-listings-section',
+      '.app-fullwidth-showcase-section',
+      '.app-showcase-img-col',
+      '.app-showcase-content-col',
+      '.app-resale-card',
+      '.trusted-developers-section',
+      '.dev-grid-logo-item',
+      '.site-footer',
+      '.footer-top-banner',
+      '.footer-main-grid'
+    ];
+
+    const elements = document.querySelectorAll(selectors.join(', '));
+    elements.forEach((el) => {
+      if (!el.classList.contains('scroll-reveal')) {
+        if (el.classList.contains('broker-fw-left') || el.classList.contains('app-showcase-img-col')) {
+          el.classList.add('scroll-reveal', 'reveal-slide-left');
+        } else if (el.classList.contains('broker-fw-right') || el.classList.contains('app-showcase-content-col')) {
+          el.classList.add('scroll-reveal', 'reveal-slide-right');
+        } else if (el.classList.contains('app-resale-card') || el.classList.contains('why-choose-card') || el.classList.contains('dev-grid-logo-item') || el.classList.contains('broker-value-card')) {
+          el.classList.add('scroll-reveal', 'reveal-slide-up');
+        } else {
+          el.classList.add('scroll-reveal');
+        }
+
+        if (el.parentElement) {
+          const siblings = Array.from(el.parentElement.children);
+          const index = siblings.indexOf(el);
+          if (index >= 0 && index < 12) {
+            const delay = (index % 4) * 0.08;
+            el.style.transitionDelay = `${delay}s`;
+          }
+        }
+      }
+
+      if (!el.classList.contains('is-revealed')) {
+        this.scrollObserver.observe(el);
       }
     });
   }
@@ -418,6 +495,153 @@ class TapEgyptApp {
       projSelect.innerHTML = '<option value="">Select</option>' +
         projects.map(p => `<option value="${p}">${p}</option>`).join('');
     }
+
+    this.updateAllSearchableSelects();
+  }
+
+  setupSearchableSelects() {
+    const targetSelectIds = [
+      'hero-city-select',
+      'hero-type-select',
+      'filter-location-select',
+      'filter-developer-select',
+      'filter-project-select',
+      'filter-type-select'
+    ];
+
+    targetSelectIds.forEach(id => {
+      const select = document.getElementById(id);
+      if (select && !select.dataset.searchableInit) {
+        this.initSingleSearchableSelect(select);
+      }
+    });
+
+    if (!this.searchableSelectsGlobalBound) {
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.searchable-select-wrapper')) {
+          document.querySelectorAll('.searchable-select-wrapper.open').forEach(w => w.classList.remove('open'));
+        }
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          document.querySelectorAll('.searchable-select-wrapper.open').forEach(w => w.classList.remove('open'));
+        }
+      });
+      this.searchableSelectsGlobalBound = true;
+    }
+  }
+
+  initSingleSearchableSelect(select) {
+    if (!select || select.dataset.searchableInit === "true") return;
+    select.dataset.searchableInit = "true";
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'searchable-select-wrapper';
+    
+    if (select.classList.contains('hero-select-field-white')) {
+      wrapper.classList.add('hero-select-wrapper');
+    }
+
+    const firstOptText = select.options[0]?.text || 'Select...';
+
+    wrapper.innerHTML = `
+      <button type="button" class="searchable-select-trigger" aria-haspopup="listbox">
+        <span class="searchable-select-label">${firstOptText}</span>
+        <svg class="searchable-select-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="searchable-select-popover">
+        <div class="searchable-select-search-wrap">
+          <input type="text" class="searchable-select-search-input" placeholder="Search..." autocomplete="off">
+        </div>
+        <div class="searchable-select-options-list"></div>
+      </div>
+    `;
+
+    select.parentNode.insertBefore(wrapper, select);
+    wrapper.appendChild(select);
+    select.style.display = 'none';
+
+    const trigger = wrapper.querySelector('.searchable-select-trigger');
+    const searchInput = wrapper.querySelector('.searchable-select-search-input');
+    const optionsList = wrapper.querySelector('.searchable-select-options-list');
+
+    const renderOptions = (filterTerm = '') => {
+      const options = Array.from(select.options);
+      const term = filterTerm.toLowerCase().trim();
+      
+      const filtered = options.filter(opt => opt.text.toLowerCase().includes(term));
+
+      if (filtered.length === 0) {
+        optionsList.innerHTML = `<div class="searchable-select-no-results">No matching options found</div>`;
+        return;
+      }
+
+      optionsList.innerHTML = filtered.map(opt => {
+        const isSelected = opt.value === select.value || (!select.value && opt === select.options[select.selectedIndex]);
+        return `
+          <div class="searchable-select-option ${isSelected ? 'selected' : ''}" data-value="${opt.value}">
+            <span>${opt.text}</span>
+            ${isSelected ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0E7C79" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' : ''}
+          </div>
+        `;
+      }).join('');
+
+      optionsList.querySelectorAll('.searchable-select-option').forEach(optEl => {
+        optEl.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const val = optEl.dataset.value;
+          select.value = val;
+          select.dispatchEvent(new Event('change', { bubbles: true }));
+          wrapper.classList.remove('open');
+          this.updateSearchableSelectUI(select);
+        });
+      });
+    };
+
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isAlreadyOpen = wrapper.classList.contains('open');
+      document.querySelectorAll('.searchable-select-wrapper.open').forEach(w => w.classList.remove('open'));
+
+      if (!isAlreadyOpen) {
+        wrapper.classList.add('open');
+        searchInput.value = '';
+        renderOptions('');
+        setTimeout(() => searchInput.focus(), 40);
+      }
+    });
+
+    searchInput.addEventListener('input', (e) => {
+      renderOptions(e.target.value);
+    });
+
+    select.addEventListener('change', () => {
+      this.updateSearchableSelectUI(select);
+    });
+
+    this.updateSearchableSelectUI(select);
+  }
+
+  updateSearchableSelectUI(select) {
+    if (!select) return;
+    const wrapper = select.closest('.searchable-select-wrapper');
+    if (!wrapper) return;
+    const labelSpan = wrapper.querySelector('.searchable-select-label');
+    const selectedOpt = select.options[select.selectedIndex];
+    if (labelSpan && selectedOpt) {
+      labelSpan.textContent = selectedOpt.text;
+    }
+  }
+
+  updateAllSearchableSelects() {
+    document.querySelectorAll('select[data-searchable-init]').forEach(select => {
+      const wrapper = select.closest('.searchable-select-wrapper');
+      if (wrapper) {
+        this.updateSearchableSelectUI(select);
+      } else {
+        this.initSingleSearchableSelect(select);
+      }
+    });
   }
 
   applyFilterDrawerValues() {
@@ -732,6 +956,8 @@ class TapEgyptApp {
 
     // 4. Our Trusted Developers Logo Slider
     this.renderDeveloperSlider();
+
+    setTimeout(() => this.observeScrollAnimations(), 30);
   }
 
   renderDeveloperSlider() {
@@ -879,7 +1105,7 @@ class TapEgyptApp {
       track.style.transition = 'none';
       cards.forEach(card => card.style.transition = 'none');
     } else {
-      track.style.transition = 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)';
+      track.style.transition = 'transform 0.85s cubic-bezier(0.25, 1, 0.35, 1)';
       cards.forEach(card => card.style.transition = '');
     }
 
@@ -921,12 +1147,12 @@ class TapEgyptApp {
         this.offerResetTimeout = setTimeout(() => {
           this.activeSlotIndex = 1;
           this.updateOfferSliderPosition(false);
-        }, 620);
+        }, 870);
       } else if (this.activeSlotIndex === 0) {
         this.offerResetTimeout = setTimeout(() => {
           this.activeSlotIndex = 4;
           this.updateOfferSliderPosition(false);
-        }, 620);
+        }, 870);
       }
     }
   }
@@ -937,7 +1163,7 @@ class TapEgyptApp {
 
     this.offerAutoPlayTimer = setInterval(() => {
       this.scrollOfferSlider(1);
-    }, 3000);
+    }, 5000);
   }
 
   pauseOfferAutoPlay() {
@@ -950,7 +1176,7 @@ class TapEgyptApp {
   goToOfferSlide(index) {
     if (this.isOfferSliding) return;
     this.isOfferSliding = true;
-    setTimeout(() => { this.isOfferSliding = false; }, 200);
+    setTimeout(() => { this.isOfferSliding = false; }, 850);
 
     this.activeSlotIndex = index + 1;
     this.updateOfferSliderPosition(true);
@@ -962,7 +1188,7 @@ class TapEgyptApp {
   scrollOfferSlider(direction) {
     if (this.isOfferSliding) return;
     this.isOfferSliding = true;
-    setTimeout(() => { this.isOfferSliding = false; }, 200);
+    setTimeout(() => { this.isOfferSliding = false; }, 850);
 
     // If currently at or beyond end slot 5 and moving forward, snap to 1 first so we slide to 2
     if (this.activeSlotIndex >= 5 && direction > 0) {
@@ -1102,6 +1328,8 @@ class TapEgyptApp {
         grid.innerHTML = list.map(p => this.renderPropertyCardHTML(p)).join('');
       }
     }
+
+    setTimeout(() => this.observeScrollAnimations(), 30);
   }
 
   renderPropertyDetailView(property) {
@@ -1332,7 +1560,7 @@ class TapEgyptApp {
     }
     toast.textContent = message;
     toast.classList.add('active');
-    setTimeout(() => toast.classList.remove('active'), 2500);
+    setTimeout(() => toast.classList.remove('active'), 3500);
   }
 
   // HEADER UX MODAL HANDLERS
