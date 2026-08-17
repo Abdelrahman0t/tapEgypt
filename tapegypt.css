@@ -1115,19 +1115,27 @@ button, input, select, textarea {
   height: 46px;
   border: 1px solid var(--border-light);
   border-radius: 10px;
-  padding: 0 16px;
+  padding: 0 38px 0 16px;
   font-size: 14px;
   font-weight: 500;
-  color: var(--text-secondary);
+  color: var(--text-primary);
   outline: none;
   background-color: var(--bg-offwhite);
   cursor: pointer;
   font-family: var(--font-manrope);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230E7C79' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px 16px;
 }
 
 .hero-select-field-white:focus {
   border-color: var(--teal-primary);
   background-color: #FFFFFF;
+  box-shadow: 0 0 0 3px rgba(14, 124, 121, 0.12);
 }
 
 /* Price Range Slider Box & 1-Click Quick Price Chips */
@@ -4438,8 +4446,7 @@ button, input, select, textarea {
     box-sizing: border-box !important;
   }
 
-  .search-main-bar-row input.hero-input-field-white,
-  .search-main-bar-row select.hero-select-field-white {
+  .search-main-bar-row input.hero-input-field-white {
     width: 100% !important;
     height: 48px !important;
     font-size: 14.5px !important;
@@ -4447,6 +4454,18 @@ button, input, select, textarea {
     border: 1.5px solid #CBD5E1 !important;
     background-color: #FFFFFF !important;
     padding: 12px 16px !important;
+    color: #0F172A !important;
+    box-sizing: border-box !important;
+  }
+
+  .search-main-bar-row select.hero-select-field-white {
+    width: 100% !important;
+    height: 48px !important;
+    font-size: 14.5px !important;
+    border-radius: 12px !important;
+    border: 1.5px solid #CBD5E1 !important;
+    background-color: #FFFFFF !important;
+    padding: 12px 38px 12px 16px !important;
     color: #0F172A !important;
     box-sizing: border-box !important;
   }
@@ -4945,8 +4964,7 @@ button, input, select, textarea {
     box-sizing: border-box !important;
   }
 
-  .search-main-bar-row input.hero-input-field-white,
-  .search-main-bar-row select.hero-select-field-white {
+  .search-main-bar-row input.hero-input-field-white {
     width: 100% !important;
     height: 48px !important;
     font-size: 14.5px !important;
@@ -4954,6 +4972,18 @@ button, input, select, textarea {
     border: 1.5px solid #CBD5E1 !important;
     background-color: #FFFFFF !important;
     padding: 16px 16px !important;
+    color: #0F172A !important;
+    box-sizing: border-box !important;
+  }
+
+  .search-main-bar-row select.hero-select-field-white {
+    width: 100% !important;
+    height: 48px !important;
+    font-size: 14.5px !important;
+    border-radius: 12px !important;
+    border: 1.5px solid #CBD5E1 !important;
+    background-color: #FFFFFF !important;
+    padding: 12px 38px 12px 16px !important;
     color: #0F172A !important;
     box-sizing: border-box !important;
   }
@@ -5316,154 +5346,38 @@ button, input, select, textarea {
 }
 
 /* ==========================================================================
-   SEARCHABLE SELECT / COMBOBOX SYSTEM
+   CLEAN NATIVE HTML <SELECT> & <OPTION> STYLING SYSTEM
    ========================================================================== */
-.searchable-select-wrapper {
-  position: relative;
-  width: 100%;
-  display: inline-block;
-}
-
-.search-main-bar-row > .searchable-select-wrapper {
-  flex: 1;
-  min-width: 110px;
-}
-
-.searchable-select-trigger {
-  width: 100%;
-  height: 46px;
-  background-color: var(--bg-offwhite);
-  border: 1px solid var(--border-light);
-  border-radius: 10px;
-  padding: 0 14px;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  user-select: none;
-  font-family: var(--font-manrope);
-  text-align: left;
-  box-sizing: border-box;
-}
-
-.searchable-select-trigger:hover,
-.searchable-select-wrapper.open .searchable-select-trigger {
-  border-color: var(--teal-primary);
-  background-color: #FFFFFF;
-  box-shadow: 0 4px 16px rgba(14, 124, 121, 0.08);
-}
-
-.searchable-select-label {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  flex: 1;
-  color: var(--text-primary);
-}
-
-.searchable-select-arrow {
-  flex-shrink: 0;
-  transition: transform 0.25s ease;
-  color: #64748B;
-}
-
-.searchable-select-wrapper.open .searchable-select-arrow {
-  transform: rotate(180deg);
-  color: var(--teal-primary);
-}
-
-.searchable-select-popover {
-  display: none;
-  position: absolute;
-  top: calc(100% + 6px);
-  left: 0;
-  width: 100%;
-  min-width: 220px;
-  background-color: #FFFFFF;
-  border: 1px solid var(--border-light);
-  border-radius: 14px;
-  box-shadow: 0 16px 48px rgba(15, 23, 42, 0.18);
-  z-index: 2500;
-  overflow: hidden;
-  animation: dropdownFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.searchable-select-wrapper.open .searchable-select-popover {
-  display: block;
-}
-
-.searchable-select-search-wrap {
-  padding: 8px 10px;
-  border-bottom: 1px solid var(--border-light);
-  background-color: #F8FAFC;
-}
-
-.searchable-select-search-input {
-  width: 100%;
-  height: 36px;
-  background-color: #FFFFFF;
-  border: 1px solid #CBD5E1;
-  border-radius: 8px;
-  padding: 0 10px 0 32px;
-  font-size: 13px;
-  color: var(--text-primary);
-  outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  font-family: var(--font-manrope);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+select,
+.hero-select-field-white,
+.gray-capsule-select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230E7C79' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: 10px center;
-  box-sizing: border-box;
+  background-position: right 14px center;
+  background-size: 16px 16px;
+  padding-right: 38px !important;
+  cursor: pointer;
 }
 
-.searchable-select-search-input:focus {
+select:focus,
+.hero-select-field-white:focus,
+.gray-capsule-select:focus {
   border-color: var(--teal-primary);
+  background-color: #FFFFFF;
   box-shadow: 0 0 0 3px rgba(14, 124, 121, 0.12);
 }
 
-.searchable-select-options-list {
-  max-height: 220px;
-  overflow-y: auto;
-  padding: 4px 0;
-}
-
-.searchable-select-option {
-  padding: 9px 14px;
-  font-size: 13.5px;
-  color: var(--text-primary);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  transition: background-color 0.15s ease, color 0.15s ease;
+select option {
+  background-color: #FFFFFF;
+  color: #0F172A;
+  padding: 10px 14px;
   font-family: var(--font-manrope);
+  font-size: 14px;
+  font-weight: 500;
 }
-
-.searchable-select-option:hover {
-  background-color: rgba(14, 124, 121, 0.08);
-  color: var(--teal-primary);
-  font-weight: 600;
-}
-
-.searchable-select-option.selected {
-  background-color: rgba(14, 124, 121, 0.12);
-  color: var(--teal-primary);
-  font-weight: 700;
-}
-
-.searchable-select-no-results {
-  padding: 14px;
-  font-size: 13px;
-  color: var(--text-secondary);
-  text-align: center;
-  font-style: italic;
-}
-
 
 
 
